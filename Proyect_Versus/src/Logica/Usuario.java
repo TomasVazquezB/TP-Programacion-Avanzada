@@ -6,24 +6,48 @@ import java.util.List;
 public class Usuario {
 	
     private String nombre;
+    private String contrasena;
     private int nivelCuenta;
     private int nivelClasificatorias;
     private List<Partida> historial;
 
-    public Usuario(String nombre) {
+    public Usuario(String nombre,String contrasena) {
         this.nombre = nombre;
+        this.contrasena = contrasena;
         this.nivelCuenta = 1;
         this.nivelClasificatorias = 1;
         this.historial = new ArrayList<>();
     }
 
-  
+	public Usuario(String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias, List<Partida> historial) {
+		super();
+		this.nombre = nombre;
+		this.contrasena = contrasena;
+		this.nivelCuenta = nivelCuenta;
+		this.nivelClasificatorias = nivelClasificatorias;
+		this.historial = historial;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
+				+ ", nivelClasificatorias=" + nivelClasificatorias + ", historial=" + historial + "]";
+	}
+
 	public String getNombre() {
 		return nombre;
 	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	
+	public String getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 
 	public int getNivelCuenta() {
@@ -47,20 +71,6 @@ public class Usuario {
 	}
 
 	public void setHistorial(List<Partida> historial) {
-		this.historial = historial;
-	}
-
-	@Override
-	public String toString() {
-		return "Usuario [nombre=" + nombre + ", nivelCuenta=" + nivelCuenta + ", nivelClasificatorias="
-				+ nivelClasificatorias + ", historial=" + historial + "]";
-	}
-
-	public Usuario(String nombre, int nivelCuenta, int nivelClasificatorias, List<Partida> historial) {
-		super();
-		this.nombre = nombre;
-		this.nivelCuenta = nivelCuenta;
-		this.nivelClasificatorias = nivelClasificatorias;
 		this.historial = historial;
 	}
 	public void actualizarNivelCuenta(int nuevoNivel) {

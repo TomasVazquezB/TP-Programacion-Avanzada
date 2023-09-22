@@ -11,7 +11,6 @@ public class Partida {
         this.jugador2 = jugador2;
     }
 
-  
 	public Partida(Usuario jugador1, Usuario jugador2, Usuario ganador) {
 		super();
 		this.jugador1 = jugador1;
@@ -54,12 +53,12 @@ public class Partida {
 
     public void mostrarResumen() {
         System.out.println("Resumen de la partida:");
-        System.out.println("Jugador 1: " + jugador1.getNombre());
-        System.out.println("Jugador 2: " + jugador2.getNombre());
+        System.out.println("Jugador 1:" + jugador1.getNombre());
+        System.out.println("Jugador 2:" + jugador2.getNombre());
         if (ganador != null) {
-            System.out.println("Ganador: " + ganador.getNombre());
+            System.out.println("Ganador:" + ganador.getNombre());
         } else {
-            System.out.println("La partida está en curso.");
+            System.out.println("La partida está en curso");
         }
     }
 }

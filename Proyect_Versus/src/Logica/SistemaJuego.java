@@ -41,7 +41,11 @@ public class SistemaJuego {
 		this.partidasActivas = partidasActivas;
 	}
 
-	public void iniciarSesion(String nombre, String contraseña) {
+	public void registrarUsuario(Usuario usuario) {
+		usuariosRegistrados.add(usuario);
+	}
+	
+	public void iniciarSesion(String nombre, String contrasena) {
         // Implementa la lógica de inicio de sesión aquí.
     }
 
@@ -59,7 +63,4 @@ public class SistemaJuego {
         return null; // Usuario no encontrado
     }
 
-    public void registrarUsuario(Usuario usuario) {
-        usuariosRegistrados.add(usuario);
-    }
 }
