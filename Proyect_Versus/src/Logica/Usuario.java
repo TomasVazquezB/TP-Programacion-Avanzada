@@ -3,7 +3,7 @@ package Logica;
 import java.util.ArrayList;
 import java.util.List;
 
-class Usuario {
+public class Usuario {
 	
     private String nombre;
     private int nivelCuenta;
