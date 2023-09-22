@@ -3,7 +3,7 @@ package Logica;
 import java.util.ArrayList;
 import java.util.List;
 
-class SistemaJuego {
+public class SistemaJuego {
 	
     private List<Usuario> usuariosRegistrados;
     private List<Partida> partidasActivas;

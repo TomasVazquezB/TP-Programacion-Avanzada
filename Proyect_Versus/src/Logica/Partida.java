@@ -1,6 +1,6 @@
 package Logica;
 
-class Partida {
+public class Partida {
 	
     private Usuario jugador1;
     private Usuario jugador2;
