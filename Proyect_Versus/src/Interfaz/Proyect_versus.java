@@ -51,7 +51,7 @@ public class Proyect_versus {
 				
 			 JOptionPane.showMessageDialog(null, "Ingreso exitoso","Ingreso",JOptionPane.QUESTION_MESSAGE);
 			 Usuario registrado = usuario1.iniciarSesion("","");
-			 int opcion2 = JOptionPane.showOptionDialog(null,"Que desea realizar?\n" + "1 Jugar una partida\n" +  "2 Armar un equipo\n" ,"Opciones",JOptionPane.DEFAULT_OPTION, 0, null,opcionesdeinicio,opcionesdeinicio[0]);
+			 int opcion2 = JOptionPane.showOptionDialog(null,"Que desea realizar?\n" + "1 Armar equipo\n" +  "2 Jugar una partida\n" ,"Opciones",JOptionPane.DEFAULT_OPTION, 0, null,opcionesdeinicio,opcionesdeinicio[0]);
 		
 			}
 			
@@ -59,25 +59,26 @@ public class Proyect_versus {
 			
 	case 2: 
 		
+		JOptionPane.showMessageDialog(null, "Lista de equipos que tiene:", "Equipos",JOptionPane.QUESTION_MESSAGE);
 		
+		JOptionPane.showMessageDialog(null, "Los personajes que tiene para elegir son:", "Personajes", JOptionPane.QUESTION_MESSAGE);
+		
+		JOptionPane.showMessageDialog(null, "Esta seguro que quiere guardar ese equipo? Si o No", "Guardar equipo", JOptionPane.QUESTION_MESSAGE);
 		
 		
 		break;
 	
 	case 3: 
 		
-		JOptionPane.showMessageDialog(null, "Lista de equipos que tiene:", "Equipos",JOptionPane.QUESTION_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Con que equipo desea jugar?", "Listado de equipos", JOptionPane.QUESTION_MESSAGE);
 		
-		JOptionPane.showMessageDialog(null, "Los personajes que tiene para elegir son:", "Personajes", JOptionPane.QUESTION_MESSAGE);
+	    JOptionPane.showMessageDialog(null, "La partida va a empezar, esta listo", "Partida iniciando", JOptionPane.QUESTION_MESSAGE);
 		
-		
-		break; 
-		
+	    break; 
 		
 		}
 
 	} while (opcion == 6);
 		
-	
 	}
 }
