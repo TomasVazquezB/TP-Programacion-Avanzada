@@ -3,7 +3,7 @@ package Logica;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Usuario {
+public class Usuario implements InicioDeSesion{
 	
     private String nombre;
     private String contrasena;
@@ -84,5 +84,15 @@ public class Usuario {
     public void registrarPartida(Partida partida) {
         historial.add(partida);
     }
+
+	@Override
+	public void menu() {
+		
+	}
+
+	@Override
+	public void cerrarSesion() {
+		
+	}
 
 }

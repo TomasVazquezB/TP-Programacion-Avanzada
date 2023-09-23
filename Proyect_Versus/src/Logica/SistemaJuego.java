@@ -44,11 +44,7 @@ public class SistemaJuego {
 	public void registrarUsuario(Usuario usuario) {
 		usuariosRegistrados.add(usuario);
 	}
-	
-	public void iniciarSesion(String nombre, String contrasena) {
-        // Implementa la lógica de inicio de sesión aquí.
-    }
-
+	    
     public void crearPartida(Usuario jugador1, Usuario jugador2) {
         Partida partida = new Partida(jugador1, jugador2);
         partidasActivas.add(partida);
