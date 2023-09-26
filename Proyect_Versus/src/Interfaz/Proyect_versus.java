@@ -23,6 +23,7 @@ public class Proyect_versus {
 		
 		case 0: 
 			
+			//Corregir esto y inicio de sesion y que ande todo bien sin bugs
 			
 			JOptionPane.showMessageDialog(null, "Registrese con sus datos","Registro",JOptionPane.QUESTION_MESSAGE);
 			
