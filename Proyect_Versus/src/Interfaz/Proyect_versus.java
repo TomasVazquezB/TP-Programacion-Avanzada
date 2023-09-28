@@ -21,43 +21,56 @@ public class Proyect_versus {
 		
 		switch (seleccion) {
 		
-		case 0: 
-			
-			//Corregir esto y inicio de sesion y que ande todo bien sin bugs
-			
-			JOptionPane.showMessageDialog(null, "Registrese con sus datos","Registro",JOptionPane.QUESTION_MESSAGE);
-			
-			String nombredeusuario,contrasenadeusuario;
-			
-			nombredeusuario = JOptionPane.showInputDialog(null,"Ingrese el nombre de usuario que desea","Registro nombre",JOptionPane.QUESTION_MESSAGE);
-			usuario1.setNombre(nombredeusuario);
-			contrasenadeusuario = JOptionPane.showInputDialog(null,"Ingrese la contraseña que va a utilizar","Registro contraseña",JOptionPane.QUESTION_MESSAGE);
-			usuario1.setContrasena(contrasenadeusuario);
-		
-			if (usuario1.iniciarSesion("","")==null) {
-				JOptionPane.showMessageDialog(null, "Registro fallido", "Error", JOptionPane.ERROR_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(null, "Registro exitoso", "Registro finalizado", JOptionPane.INFORMATION_MESSAGE);
-			}
-			
-			break;
-			
-		case 1:
-			
-			//Si no ingreso que no pueda ver las opciones, y si ingreso que pueda ver las opciones
-			
-			JOptionPane.showMessageDialog(null, "Ingrese sus datos para iniciar sesion", "Ingreso de datos",JOptionPane.QUESTION_MESSAGE);
-			usuario1.iniciarSesion("","");
-			
-			 if (usuario1.iniciarSesion("","")!=null) {
-					
-				 JOptionPane.showMessageDialog(null, "Ingreso exitoso","Ingreso",JOptionPane.QUESTION_MESSAGE);
-				 Usuario registrado = usuario1.iniciarSesion("","");
-				 int opcion2 = JOptionPane.showOptionDialog(null,"Que desea realizar?\n" + "1 Armar equipo\n" +  "2 Jugar una partida\n" ,"Opciones",JOptionPane.DEFAULT_OPTION, 0, null,opciones,opciones[0]);
-			
-				}
-				
-				break;
+		case 0:
+            // Registro de usuario
+            String nombreUsuario, contrasenaUsuario;
+            
+            JOptionPane.showMessageDialog(null, "Registrese con sus datos", "Registro", JOptionPane.QUESTION_MESSAGE);
+            
+            nombreUsuario = JOptionPane.showInputDialog(null, "Ingrese el nombre de usuario que desea", "Registro nombre", JOptionPane.QUESTION_MESSAGE);
+            contrasenaUsuario = JOptionPane.showInputDialog(null, "Ingrese la contraseña que va a utilizar", "Registro contraseña", JOptionPane.QUESTION_MESSAGE);
+            
+            // Crear un nuevo usuario y registrar
+            Usuario nuevoUsuario = new Usuario(nombreUsuario);
+            nuevoUsuario.setContrasena(contrasenaUsuario);
+            
+            sistema.registrarUsuario(nuevoUsuario); // Registrar el nuevo usuario en el sistema
+            
+            JOptionPane.showMessageDialog(null, "Registro exitoso", "Registro finalizado", JOptionPane.INFORMATION_MESSAGE);
+            break;
+
+        case 1:
+            // Iniciar sesión
+            String nombreIngreso, contrasenaIngreso;
+
+            JOptionPane.showMessageDialog(null, "Ingrese sus datos para iniciar sesión", "Ingreso de datos", JOptionPane.QUESTION_MESSAGE);
+            
+            nombreIngreso = JOptionPane.showInputDialog(null, "Ingrese su nombre de usuario", "Iniciar Sesión", JOptionPane.QUESTION_MESSAGE);
+            contrasenaIngreso = JOptionPane.showInputDialog(null, "Ingrese su contraseña", "Iniciar Sesión", JOptionPane.QUESTION_MESSAGE);
+            
+            Usuario usuarioLogueado = sistema.iniciarSesion(nombreIngreso, contrasenaIngreso);
+            
+            if (usuarioLogueado != null) {
+                JOptionPane.showMessageDialog(null, "Ingreso exitoso", "Ingreso", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Aquí puedes agregar lógica adicional para las opciones del usuario logueado
+                String[] opcionesLogueado = {"Armar equipo", "Jugar una partida", "Salir"};
+                int seleccionLogueado = JOptionPane.showOptionDialog(
+                    null,
+                    "¿Qué desea realizar?",
+                    "Opciones",
+                    JOptionPane.DEFAULT_OPTION,
+                    0,
+                    null,
+                    opcionesLogueado,
+                    opcionesLogueado[0]
+                );
+                
+                // Implementa la lógica para las opciones del usuario logueado aquí
+            } else {
+                JOptionPane.showMessageDialog(null, "Inicio de sesión fallido", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            break;
 						
 		case 2:
 			
