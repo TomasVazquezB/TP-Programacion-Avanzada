@@ -3,8 +3,8 @@ package Logica;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SistemaJuego {
-	
+public class SistemaJuego implements InicioDeSesion {
+
     private List<Usuario> usuariosRegistrados;
     private List<Partida> partidasActivas;
 
@@ -13,36 +13,34 @@ public class SistemaJuego {
         this.partidasActivas = new ArrayList<>();
     }
 
-    public SistemaJuego(List<Usuario> usuariosRegistrados, List<Partida> partidasActivas) {
-		super();
-		this.usuariosRegistrados = usuariosRegistrados;
-		this.partidasActivas = partidasActivas;
-	}
+    @Override
+    public Usuario iniciarSesion(String nombreIngreso, String contrasenaIngreso) {
+        for (Usuario usuario : usuariosRegistrados) {
+            if (usuario.getNombre().equals(nombreIngreso) && usuario.getContrasena().equals(contrasenaIngreso)) {
+                return usuario; // Credenciales válidas, devuelve el usuario
+            }
+        }
+        return null; // Credenciales no válidas, devuelve null
+    }
 
-	@Override
-	public String toString() {
-		return "SistemaJuego [usuariosRegistrados=" + usuariosRegistrados + ", partidasActivas=" + partidasActivas
-				+ "]";
-	}
+    @Override
+    public void menu() {
+        // Implementa el menú de opciones después de iniciar sesión aquí
+    }
 
-	public List<Usuario> getUsuariosRegistrados() {
-		return usuariosRegistrados;
-	}
+    @Override
+    public void cerrarSesion() {
+        // Implementa el cierre de sesión aquí
+    }
 
-	public void setUsuariosRegistrados(List<Usuario> usuariosRegistrados) {
-		this.usuariosRegistrados = usuariosRegistrados;
-	}
-
-	public List<Partida> getPartidasActivas() {
-		return partidasActivas;
-	}
-
-	public void setPartidasActivas(List<Partida> partidasActivas) {
-		this.partidasActivas = partidasActivas;
-	}
-
-	public void iniciarSesion(String nombre, String contraseña) {
-        // Implementa la lógica de inicio de sesión aquí.
+    public boolean registrarUsuario(Usuario usuario) {
+        // Verifica si el nombre de usuario ya existe
+        if (!nombreDeUsuarioExistente(usuario.getNombre())) {
+            usuariosRegistrados.add(usuario);
+            return true; // Registro exitoso
+        } else {
+            return false; // El nombre de usuario ya está en uso
+        }
     }
 
     public void crearPartida(Usuario jugador1, Usuario jugador2) {
@@ -59,7 +57,14 @@ public class SistemaJuego {
         return null; // Usuario no encontrado
     }
 
-    public void registrarUsuario(Usuario usuario) {
-        usuariosRegistrados.add(usuario);
+    // Método auxiliar para verificar si un nombre de usuario ya existe
+    private boolean nombreDeUsuarioExistente(String nombre) {
+        for (Usuario usuario : usuariosRegistrados) {
+            if (usuario.getNombre().equals(nombre)) {
+                return true; // El nombre de usuario ya está en uso
+            }
+        }
+        return false; // El nombre de usuario no está en uso
     }
 }
+

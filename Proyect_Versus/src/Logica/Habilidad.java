@@ -6,7 +6,6 @@ public class Habilidad {
     private String descripcion;
     private int daño;
 
-
     public Habilidad(String nombre, String descripcion, int daño) {
 		super();
 		this.nombre = nombre;
@@ -43,7 +42,6 @@ public class Habilidad {
 		this.nombre = nombre;
 	}
 
-	
 	public void usarHabilidad(Personaje objetivo) {
         System.out.println("Usando " + nombre + " contra " + objetivo.getNombre() + ". Daño: " + daño);
     }
