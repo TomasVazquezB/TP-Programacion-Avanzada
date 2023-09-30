@@ -1,20 +1,24 @@
 package Logica;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public interface InicioDeSesion {
 
-default Usuario iniciarSesion(String nombre,String contrasena) {
-		
-		if (nombre.equals("")) {
-			Usuario nuevo = new Usuario(nombre,contrasena);
-			return nuevo;
-		}else {
-			
-			return null;
-		}
-	}
-	
-	void menu();
-	
-	void cerrarSesion();
-		
+    
+    List<Usuario> usuariosRegistrados = new ArrayList<>();
+
+    default Usuario iniciarSesion(String nombre, String contrasena) {
+        // Realizar la autenticación aquí
+        for (Usuario usuario : usuariosRegistrados) {
+            if (usuario.getNombre().equals(nombre) && usuario.getContrasena().equals(contrasena)) {
+                return usuario; // Credenciales válidas, devuelve el usuario
+            }
+        }
+        return null; // Credenciales no válidas, devuelve null
+    }
+
+    void menu();
+
+    void cerrarSesion();
 }
