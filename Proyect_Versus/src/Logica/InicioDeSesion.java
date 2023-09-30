@@ -5,7 +5,6 @@ import java.util.List;
 
 public interface InicioDeSesion {
 
-    
     List<Usuario> usuariosRegistrados = new ArrayList<>();
 
     default Usuario iniciarSesion(String nombre, String contrasena) {
