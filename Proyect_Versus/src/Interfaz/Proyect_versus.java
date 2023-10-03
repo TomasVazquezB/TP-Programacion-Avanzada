@@ -1,7 +1,10 @@
 package Interfaz;
 
 import javax.swing.*;
+import java.sql.Connection.*;
 import Logica.*;
+import BD.*;
+
 
 public class Proyect_versus {
 
@@ -68,10 +71,9 @@ public class Proyect_versus {
         if (sistema.registrarUsuario(nuevoUsuario)) {
             JOptionPane.showMessageDialog(null, "Registro exitoso", "Registro finalizado",JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "El nombre de usuario ya está en uso. Intente con otro nombre.", "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El nombre de usuario ya está en uso. Intente con otro nonmbre.", "Error",JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
     private static Usuario iniciarSesion(SistemaJuego sistema) {
         String nombreIngreso, contrasenaIngreso;
@@ -85,7 +87,7 @@ public class Proyect_versus {
 
     private static void mostrarMenu(Usuario usuario) {
         String[] opcionesLogueado = { "Armar equipo", "Jugar una partida", "Cerrar Sesión" };
-        int seleccionLogueado = JOptionPane.showOptionDialog(null, "¿Qué desea realizar?", "Opciones",JOptionPane.DEFAULT_OPTION, 0, null, opcionesLogueado, opcionesLogueado[0]);
+        int seleccionLogueado = JOptionPane.showOptionDialog(null, "¿Qué desea realizar?", "Opciones",JOptionPane.DEFAULT_OPTION,JOptionPane.INFORMATION_MESSAGE, null, opcionesLogueado, opcionesLogueado[0]);
 
         switch (seleccionLogueado) {
             case 0:
@@ -102,4 +104,3 @@ public class Proyect_versus {
         }
     }
 }
-
