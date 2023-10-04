@@ -1,5 +1,7 @@
 package Logica;
 
+import javax.swing.*;
+
 public class Habilidad {
 	
     private String nombre;
@@ -43,6 +45,6 @@ public class Habilidad {
 	}
 
 	public void usarHabilidad(Personaje objetivo) {
-        System.out.println("Usando " + nombre + " contra " + objetivo.getNombre() + ". Daño: " + daño);
+     JOptionPane.showMessageDialog(null,"Usando " + nombre + " contra " + objetivo.getNombre() + ". Daño: " + daño,"Personaje en uso",JOptionPane.DEFAULT_OPTION);
     }
 }

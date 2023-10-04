@@ -1,5 +1,6 @@
 package Logica;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +57,9 @@ public class Personaje {
     }
 
     public void mostrarHabilidades() {
-        System.out.println("Habilidades de" + nombre + ":");
+       JOptionPane.showMessageDialog(null,"Las Habilidades de" + nombre + ":","Habilidades",JOptionPane.DEFAULT_OPTION);
         for (Habilidad habilidad : habilidades) {
-            System.out.println("-" + habilidad.getNombre());
+           JOptionPane.showMessageDialog(null,"-" + habilidad.getNombre(),"Habilidad del personaje",JOptionPane.DEFAULT_OPTION);
         }
     }
 }

@@ -1,5 +1,7 @@
 package Logica;
 
+import javax.swing.JOptionPane;
+
 public class Partida {
 	
     private Usuario jugador1;
@@ -52,13 +54,13 @@ public class Partida {
     }
 
     public void mostrarResumen() {
-        System.out.println("Resumen de la partida:");
-        System.out.println("Jugador 1:" + jugador1.getNombre());
-        System.out.println("Jugador 2:" + jugador2.getNombre());
+        JOptionPane.showMessageDialog(null,"Resumen de la partida:","Resumen de la partida",JOptionPane.DEFAULT_OPTION);
+        JOptionPane.showMessageDialog(null,"Jugador 1:" + jugador1.getNombre());
+        JOptionPane.showMessageDialog(null,"Jugador 2:" + jugador2.getNombre());
         if (ganador != null) {
-            System.out.println("Ganador:" + ganador.getNombre());
+        JOptionPane.showMessageDialog(null,"El Ganador es:" + ganador.getNombre(),"Ganador",JOptionPane.DEFAULT_OPTION);
         } else {
-            System.out.println("La partida está en curso");
+        JOptionPane.showMessageDialog(null,"La partida está en curso","Partida en curso",JOptionPane.DEFAULT_OPTION);
         }
     }
 }
