@@ -12,7 +12,7 @@ public class Partida {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
     }
-    
+
 	public Partida(Usuario jugador1, Usuario jugador2, Usuario ganador) {
 		super();
 		this.jugador1 = jugador1;
