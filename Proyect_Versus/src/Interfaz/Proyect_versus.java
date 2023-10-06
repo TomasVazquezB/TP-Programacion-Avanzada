@@ -1,7 +1,7 @@
 package Interfaz;
 
 import javax.swing.*;
-import java.sql.Connection.*;
+import java.sql.*;
 import Logica.*;
 import BD.*;
 
