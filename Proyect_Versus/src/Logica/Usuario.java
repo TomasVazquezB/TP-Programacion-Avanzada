@@ -1,4 +1,4 @@
-package Logica;
+package logica;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +85,15 @@ public class Usuario implements InicioDeSesion{
         historial.add(partida);
     }
 
+    public void crearCuenta(String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias) {
+        Usuario nuevoUsuario = new Usuario(nombre, contrasena);
+        nuevoUsuario.nombre = nombre;
+        nuevoUsuario.contrasena = contrasena;
+        nuevoUsuario.nivelCuenta = nivelCuenta;
+        nuevoUsuario.nivelClasificatorias = nivelClasificatorias;
+        nuevoUsuario.historial = new ArrayList<Partida>();
+    }
+    
 	@Override
 	public void menu() {
 		
