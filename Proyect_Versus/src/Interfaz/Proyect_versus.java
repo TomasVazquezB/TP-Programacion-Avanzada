@@ -1,9 +1,9 @@
-package interfaz;
+package Interfaz;
 
 import javax.swing.*;
 
 import java.sql.*;
-import logica.*;
+import Logica.*;
 import BD.*;
 
 public class Proyect_versus {

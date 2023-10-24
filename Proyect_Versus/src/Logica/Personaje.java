@@ -1,4 +1,4 @@
-package logica;
+package Logica;
 
 import javax.swing.*;
 import java.util.ArrayList;
