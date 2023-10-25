@@ -1,10 +1,10 @@
 package Logica;
 
+import Logica.*;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Validador {
 
