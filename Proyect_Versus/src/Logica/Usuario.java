@@ -1,10 +1,7 @@
 package Logica;
 
 import Logica.*;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,8 +26,7 @@ public class Usuario implements InicioDeSesion {
     }
 
     //Crear el constructor
-
-    // Ahora, puedes utilizar estos datos para interactuar con la base de datos
+   
     public boolean guardar() {
         String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `nivelCuenta`, `nivelClasificatorias`) VALUES (?,?,?,?)";
         try {
@@ -48,7 +44,8 @@ public class Usuario implements InicioDeSesion {
         }
     }
 
-    public boolean editar() {
+
+	public boolean editar() {
         String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`nivelCuenta`=?,`nivelClasificatorias`=? WHERE nombre = ?";
         try {
             stmt = conexion.prepareStatement(sql);
