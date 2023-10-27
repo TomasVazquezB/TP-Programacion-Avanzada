@@ -15,25 +15,33 @@ public class Validador {
         this.conexion = conexion;
     }
 
-    public boolean ValidarIngreso(String nombre, String contrasena) {
+    public Usuario ValidarIngreso(String nombre, String contrasena) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos");
-            return false;
+            return null;
         } else {
+        	 String[] datos = new String[4];
+        
             try {
                 String sql = "SELECT * FROM usuario WHERE nombre = ? AND contrasena = ?";
                 stmt = conexion.prepareStatement(sql);
                 stmt.setString(1, nombre);
                 stmt.setString(2, contrasena);
                 ResultSet resultado = stmt.executeQuery();
-                if (resultado.next()) {
-                    return true; // Credenciales válidas
-                }
+        
+                    while (resultado.next()) {
+                        datos[0] = resultado.getString(1);
+                        datos[1] = resultado.getString(2);
+                        datos[2] = resultado.getString(3);
+                        datos[3] = resultado.getString(4);
+                        Usuario usuario = new Usuario(datos[0], datos[1]);
+                        return usuario;
+                    }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error al validar inicio de sesión: " + e.getMessage());
             }
-            return false; // Credenciales no válidas o error de autenticación
         }
+		return null;
     }
 
     public boolean ValidarEditar(String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias) {
@@ -111,4 +119,20 @@ public class Validador {
         }
         return historial;
     }
+    
+    public boolean registrarUsuario(Usuario usuario) {
+        String sql = "INSERT INTO usuario (nombre, contrasena, nivelCuenta, nivelClasificatorias) VALUES (?, ?, ?, ?)";
+          try {
+              stmt = conexion.prepareStatement(sql);
+              stmt.setString(1, usuario.getNombre());
+              stmt.setString(2, usuario.getContrasena());
+              stmt.setInt(3, usuario.getNivelCuenta());
+              stmt.setInt(4, usuario.getNivelClasificatorias());
+              stmt.executeUpdate();
+              return true; // Registro exitoso
+          } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al registrar usuario: " + e.getMessage());
+             return false; // Error en el registro
+          }
+      }
 }

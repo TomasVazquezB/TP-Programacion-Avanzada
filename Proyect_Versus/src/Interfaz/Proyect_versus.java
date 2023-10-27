@@ -5,12 +5,15 @@ import javax.swing.*;
 import java.sql.*;
 import Logica.*;
 import BD.*;
+import BD.Conexion;
 
 public class Proyect_versus {
 
     public static void main(String[] args) {
 
-        SistemaJuego sistema = new SistemaJuego();
+    	Conexion conexin = new Conexion();
+    	Connection conexion = conexin.conectar();
+        Validador sistema = new Validador(conexion);
 
         while (true) {
 
@@ -47,7 +50,7 @@ public class Proyect_versus {
         }
     }
 
-    private static void registrarUsuario(SistemaJuego sistema) {
+    private static void registrarUsuario(Validador sistema) {
         String nombreUsuario, contrasenaUsuario;
         JOptionPane.showMessageDialog(null, "Registrese con sus datos", "Registro", JOptionPane.QUESTION_MESSAGE);
         
@@ -75,14 +78,14 @@ public class Proyect_versus {
         }
     }
 
-    private static Usuario iniciarSesion(SistemaJuego sistema) {
+    private static Usuario iniciarSesion(Validador sistema) {
         String nombreIngreso, contrasenaIngreso;
         
         JOptionPane.showMessageDialog(null, "Ingrese sus datos para iniciar sesión", "Ingreso de datos",JOptionPane.QUESTION_MESSAGE);
         nombreIngreso = JOptionPane.showInputDialog(null, "Ingrese su nombre de usuario", "Iniciar Sesión",JOptionPane.QUESTION_MESSAGE);
         contrasenaIngreso = JOptionPane.showInputDialog(null, "Ingrese su contraseña", "Iniciar Sesión",JOptionPane.QUESTION_MESSAGE);
         
-        return sistema.iniciarSesion(nombreIngreso, contrasenaIngreso);
+        return sistema.ValidarIngreso(nombreIngreso, contrasenaIngreso);
     }
 
     private static void mostrarMenu(Usuario usuario) {
