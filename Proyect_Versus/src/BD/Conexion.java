@@ -13,7 +13,7 @@ Connection con ;
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3463/BD Juego Por Turnos","root","");
-			JOptionPane.showMessageDialog(null, "Se conecto");
+			//JOptionPane.showMessageDialog(null, "Se conecto");
 		} catch (Exception e) {
 	
 			JOptionPane.showMessageDialog(null, "Error al conectarse");

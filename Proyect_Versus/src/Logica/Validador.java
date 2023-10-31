@@ -44,18 +44,19 @@ public class Validador {
 		return null;
     }
 
-    public boolean ValidarEditar(String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias) {
+    public boolean ValidarEditar(String nombre, String contrasena, int jugador_id,int nivelCuenta, int nivelClasificatorias) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos");
             return false;
         } else {
             try {
-                String sql = "UPDATE usuario SET contrasena = ?, nivelCuenta = ?, nivelClasificatorias = ? WHERE nombre = ?";
+                String sql = "UPDATE usuario SET contrasena = ?, jugador_id = ?, nivelCuenta = ?, nivelClasificatorias = ? WHERE nombre = ?";
                 stmt = conexion.prepareStatement(sql);
-                stmt.setString(1, contrasena);
-                stmt.setInt(2, nivelCuenta);
-                stmt.setInt(3, nivelClasificatorias);
-                stmt.setString(4, nombre);
+                stmt.setString(1, nombre);
+                stmt.setString(2, contrasena);
+                stmt.setInt(3, jugador_id);
+                stmt.setInt(4, nivelCuenta);
+                stmt.setInt(5, nivelClasificatorias);
                 int filasActualizadas = stmt.executeUpdate();
                 return filasActualizadas > 0;
             } catch (Exception e) {
@@ -92,6 +93,7 @@ public class Validador {
             while (resultado.next()) {
                 String nombre = resultado.getString("nombre");
                 String contrasena = resultado.getString("contrasena");
+                int jugador_id = resultado.getInt("jugador_id");
                 int nivelCuenta = resultado.getInt("nivelCuenta");
                 int nivelClasificatorias = resultado.getInt("nivelClasificatorias");
                 List<Partida> historial = obtenerHistorialPorUsuario(resultado.getInt("id"));
@@ -121,18 +123,38 @@ public class Validador {
     }
     
     public boolean registrarUsuario(Usuario usuario) {
-        String sql = "INSERT INTO usuario (nombre, contrasena, nivelCuenta, nivelClasificatorias) VALUES (?, ?, ?, ?)";
-          try {
-              stmt = conexion.prepareStatement(sql);
-              stmt.setString(1, usuario.getNombre());
-              stmt.setString(2, usuario.getContrasena());
-              stmt.setInt(3, usuario.getNivelCuenta());
-              stmt.setInt(4, usuario.getNivelClasificatorias());
-              stmt.executeUpdate();
-              return true; // Registro exitoso
-          } catch (Exception e) {
+        try {
+            // Obtener el ID máximo actual en la tabla 'jugador'
+            String selectMaxJugadorIdSQL = "SELECT MAX(id) FROM jugador";
+            stmt = conexion.prepareStatement(selectMaxJugadorIdSQL);
+            ResultSet rs = stmt.executeQuery();
+            int jugadorId = 1; // Valor predeterminado si no hay jugadores existentes.
+
+            if (rs.next()) {
+                jugadorId = rs.getInt(1) + 1;
+            }
+
+            // Insertar el nuevo jugador
+            String insertJugadorSQL = "INSERT INTO jugador (id, nivel) VALUES (?, ?)";
+            stmt = conexion.prepareStatement(insertJugadorSQL);
+            stmt.setInt(1, jugadorId);
+            stmt.setInt(2, usuario.getNivelCuenta());
+            stmt.executeUpdate();
+
+            // Insertar el usuario con el jugador_id obtenido
+            String insertUsuarioSQL = "INSERT INTO usuario (nombre, contrasena, jugador_id, nivelCuenta, nivelClasificatorias) VALUES (?, ?, ?, ?, ?)";
+            stmt = conexion.prepareStatement(insertUsuarioSQL);
+            stmt.setString(1, usuario.getNombre());
+            stmt.setString(2, usuario.getContrasena());
+            stmt.setInt(3, jugadorId);
+            stmt.setInt(4, usuario.getNivelCuenta());
+            stmt.setInt(5, usuario.getNivelClasificatorias());
+
+            stmt.executeUpdate();
+            return true; // Registro exitoso
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al registrar usuario: " + e.getMessage());
-             return false; // Error en el registro
-          }
-      }
+            return false; // Error en el registro
+        }
+    }
 }
