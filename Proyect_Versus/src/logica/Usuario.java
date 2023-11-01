@@ -10,6 +10,7 @@ public class Usuario implements InicioDeSesion{
     private int nivelCuenta;
     private int nivelClasificatorias;
     private List<Partida> historial;
+    private Personaje personaje;
 
     public Usuario(String nombre,String contrasena) {
         this.nombre = nombre;
@@ -85,15 +86,6 @@ public class Usuario implements InicioDeSesion{
         historial.add(partida);
     }
 
-    public void crearCuenta(String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias) {
-        Usuario nuevoUsuario = new Usuario(nombre, contrasena);
-        nuevoUsuario.nombre = nombre;
-        nuevoUsuario.contrasena = contrasena;
-        nuevoUsuario.nivelCuenta = nivelCuenta;
-        nuevoUsuario.nivelClasificatorias = nivelClasificatorias;
-        nuevoUsuario.historial = new ArrayList<Partida>();
-    }
-    
 	@Override
 	public void menu() {
 		
@@ -102,6 +94,14 @@ public class Usuario implements InicioDeSesion{
 	@Override
 	public void cerrarSesion() {
 		
+	}
+
+	public Personaje getPersonaje() {
+		return personaje;
+	}
+
+	public void setPersonaje(Personaje personaje) {
+		this.personaje = personaje;
 	}
 
 }

@@ -4,7 +4,9 @@ import javax.swing.*;
 
 import java.sql.*;
 import logica.*;
+import logica.SistemaJuego;
 import BD.*;
+
 
 public class Proyect_versus {
 
