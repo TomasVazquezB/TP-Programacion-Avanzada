@@ -93,7 +93,15 @@ public class Proyect_versus {
 
         switch (seleccionLogueado) {
             case 0:
-                // Lógica para armar equipo
+            	 // Crear partida
+                Usuario jugador = iniciarSesion(null);
+                if (jugador != null) {
+                    SistemaJuego.crearPartida(jugador);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error al crear la partida. Inicia sesión primero.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
                 break;
             case 1:
                 // Lógica para jugar una partida

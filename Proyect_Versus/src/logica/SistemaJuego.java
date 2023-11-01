@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 public class SistemaJuego implements InicioDeSesion {
 
     private List<Usuario> usuariosRegistrados;
-    private List<Partida> partidasActivas;
+    private static List<Partida> partidasActivas;
 
     public SistemaJuego() {
         this.usuariosRegistrados = new ArrayList<>();
@@ -45,7 +45,7 @@ public class SistemaJuego implements InicioDeSesion {
         }
     }
 
-    public void crearPartida(Usuario jugador) {
+    public static void crearPartida(Usuario jugador) {
         // Mostrar la lista de personajes disponibles para el jugador
         Personaje personajeJugador = seleccionarPersonaje(jugador);
 
@@ -57,7 +57,7 @@ public class SistemaJuego implements InicioDeSesion {
             // Puedes asignar el personaje al jugador en la partida
             jugador.setPersonaje(personajeJugador);
 
-            // Puedes generar un personaje aleatorio para la CPU o implementar tu lógica específica
+            
 
             // Agregar la partida a la lista de partidas activas
             partidasActivas.add(partida);
@@ -71,7 +71,7 @@ public class SistemaJuego implements InicioDeSesion {
     }
 
     // Método para seleccionar un personaje para el combate
-    private Personaje seleccionarPersonaje(Usuario jugador) {
+    private static Personaje seleccionarPersonaje(Usuario jugador) {
         List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
 
         // Mostrar una lista de personajes y permitir al jugador elegir uno
@@ -88,7 +88,7 @@ public class SistemaJuego implements InicioDeSesion {
     }
 
     // Método para obtener la lista de personajes disponibles (puedes implementar según tu lógica)
-    private List<Personaje> obtenerPersonajesDisponibles() {
+    private static List<Personaje> obtenerPersonajesDisponibles() {
         // Implementa la lógica para obtener la lista de personajes disponibles (puedes cargarla desde una base de datos, por ejemplo)
         // Aquí simplemente se crea una lista de ejemplo
         List<Personaje> personajesDisponibles = new ArrayList<>();
