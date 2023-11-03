@@ -12,11 +12,14 @@ public class Usuario implements InicioDeSesion {
     private int nivelClasificatorias;
     private int jugador_id;
     private List<Partida> historial; //Hacer una sentencia que muestre el historial de los usuarios por ID
+    private Personaje personaje;
 
+    
     // Agrega la instancia de conexión a la base de datos
     private Conexion con = new Conexion();
     private Connection conexion = con.conectar();
     private PreparedStatement stmt;
+    
 
     public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
@@ -153,6 +156,15 @@ public class Usuario implements InicioDeSesion {
 	public void setHistorial(List<Partida> historial) {
 		this.historial = historial;
 	}
+	
+	 public void setPersonaje(Personaje personaje) {
+	        this.personaje = personaje;
+	    }
+
+	 public Personaje getPersonaje() {
+		    return personaje;
+		}
+
 
 	@Override
     public void menu() {
