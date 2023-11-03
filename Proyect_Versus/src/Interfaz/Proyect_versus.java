@@ -105,32 +105,16 @@ public class Proyect_versus {
             case 0:
                 break;
             case 1:
-                crearPartida(usuario);
+                Partida nuevaPartida = new Partida(usuario);
+                nuevaPartida.jugar();
                 break;
+
             case 2:
                 JOptionPane.showMessageDialog(null, "Sesión cerrada. ¡Hasta luego!", "Sesion Cerrada",
                         JOptionPane.QUESTION_MESSAGE);
                 break;
             default:
                 break;
-        }
-    }
-
-    private static void crearPartida(Usuario jugador) {
-        Personaje personajeJugador = seleccionarPersonaje(jugador);
-
-        if (personajeJugador != null) {
-            Partida partida = new Partida(jugador, new Usuario("CPU", "contrasenaCPU"));
-
-            jugador.setPersonaje(personajeJugador);
-
-            partidasActivas.add(partida);
-
-            JOptionPane.showMessageDialog(null, "Partida contra la CPU creada con éxito. ¡Que comience el combate!",
-                    "Partida Creada", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Error en la selección de personaje. Intenta nuevamente.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -150,8 +134,8 @@ public class Proyect_versus {
 
     private static List<Personaje> obtenerPersonajesDisponibles() {
         List<Personaje> personajesDisponibles = new ArrayList<>();
-        personajesDisponibles.add(new Personaje("Personaje1", "Tipo1"));
-        personajesDisponibles.add(new Personaje("Personaje2", "Tipo2"));
+        personajesDisponibles.add(new Personaje("Personaje1", "Tipo1", null, 0));
+        personajesDisponibles.add(new Personaje("Personaje2", "Tipo2", null, 0));
         return personajesDisponibles;
     }
 }

@@ -9,24 +9,30 @@ public class Personaje {
     private String nombre;
     private String tipo;
     private List<Habilidad> habilidades;
+    private int vida;
 
-    public Personaje(String nombre, String tipo) {
+    public Personaje(String nombre, String tipo, int vida) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.habilidades = new ArrayList<>();
+        this.vida= vida;
     }
 
-    public Personaje(String nombre, String tipo, List<Habilidad> habilidades) {
+    public Personaje(String nombre, String tipo, List<Habilidad> habilidades, int vida) {
     	super();
     	this.nombre = nombre;
     	this.tipo = tipo;
     	this.habilidades = habilidades;
+        this.vida= vida;
+
     }
         
+  
     @Override
-    public String toString() {
-    	return "Personaje [nombre=" + nombre + ", tipo=" + tipo + ", habilidades=" + habilidades + "]";
-    }
+	public String toString() {
+		return "Personaje [nombre=" + nombre + ", tipo=" + tipo + ", habilidades=" + habilidades + ", vida=" + vida
+				+ "]";
+	}
     
 	public String getNombre() {
 		return nombre;
@@ -61,5 +67,21 @@ public class Personaje {
         for (Habilidad habilidad : habilidades) {
            JOptionPane.showMessageDialog(null,"-" + habilidad.getNombre(),"Habilidad del personaje",JOptionPane.DEFAULT_OPTION);
         }
+        
     }
+
+	public int getVida() {
+		return vida;
+	}
+
+	public void setVida(int vida) {
+		this.vida = vida;
+	}
+public void reducirVida(int cantidad) {
+    vida -= cantidad;
+
+    if (vida < 0) {
+        vida = 0; // Asegura que la vida no sea negativa
+    }
+}
 }

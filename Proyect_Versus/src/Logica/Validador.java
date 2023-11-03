@@ -124,10 +124,21 @@ public class Validador {
     
     public boolean registrarUsuario(Usuario usuario) {
         try {
+            // Verificar si el nombre de usuario ya existe en la base de datos
+            String selectUsuarioSQL = "SELECT COUNT(*) FROM usuario WHERE nombre = ?";
+            stmt = conexion.prepareStatement(selectUsuarioSQL);
+            stmt.setString(1, usuario.getNombre());
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next() && rs.getInt(1) > 0) {
+                // El nombre de usuario ya existe, por lo que no se puede registrar.
+                return false;
+            }
+
             // Obtener el ID máximo actual en la tabla 'jugador'
             String selectMaxJugadorIdSQL = "SELECT MAX(id) FROM jugador";
             stmt = conexion.prepareStatement(selectMaxJugadorIdSQL);
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             int jugadorId = 1; // Valor predeterminado si no hay jugadores existentes.
 
             if (rs.next()) {

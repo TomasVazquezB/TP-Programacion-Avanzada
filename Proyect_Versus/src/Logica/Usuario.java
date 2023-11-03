@@ -32,7 +32,14 @@ public class Usuario implements InicioDeSesion {
 
     //Crear el constructor
    
-    public boolean guardar() {
+    public Usuario(String nombre) {
+        this.nombre = nombre;
+        this.contrasena = "contrasena_maquina"; // Contraseña para la máquina (puedes personalizarla)
+        this.nivelCuenta = 1; // Nivel inicial para la máquina (puedes personalizarlo)
+        this.nivelClasificatorias = 10; // Nivel de clasificatorias para la máquina (puedes personalizarlo)
+    }
+
+	public boolean guardar() {
         String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `jugador_id`, `nivelCuenta`, `nivelClasificatorias`) VALUES (?,?,?,?,?)";
         try {
             stmt = conexion.prepareStatement(sql);
