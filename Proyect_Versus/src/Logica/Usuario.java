@@ -1,10 +1,7 @@
 package Logica;
 
 import Logica.*;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,12 +10,16 @@ public class Usuario implements InicioDeSesion {
     private String contrasena;
     private int nivelCuenta;
     private int nivelClasificatorias;
+    private int jugador_id;
     private List<Partida> historial; //Hacer una sentencia que muestre el historial de los usuarios por ID
+    private Personaje personaje;
 
+    
     // Agrega la instancia de conexión a la base de datos
     private Conexion con = new Conexion();
     private Connection conexion = con.conectar();
     private PreparedStatement stmt;
+    
 
     public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
@@ -26,19 +27,27 @@ public class Usuario implements InicioDeSesion {
         this.nivelCuenta = 1;
         this.nivelClasificatorias = 1;
         this.historial = new LinkedList<>();
+        this.jugador_id = 0;
     }
 
     //Crear el constructor
+   
+    public Usuario(String nombre) {
+        this.nombre = nombre;
+        this.contrasena = "contrasena_maquina"; // Contraseña para la máquina (puedes personalizarla)
+        this.nivelCuenta = 1; // Nivel inicial para la máquina (puedes personalizarlo)
+        this.nivelClasificatorias = 10; // Nivel de clasificatorias para la máquina (puedes personalizarlo)
+    }
 
-    // Ahora, puedes utilizar estos datos para interactuar con la base de datos
-    public boolean guardar() {
-        String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `nivelCuenta`, `nivelClasificatorias`) VALUES (?,?,?,?)";
+	public boolean guardar() {
+        String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `jugador_id`, `nivelCuenta`, `nivelClasificatorias`) VALUES (?,?,?,?,?)";
         try {
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, this.getNombre());
             stmt.setString(2, this.getContrasena());
-            stmt.setLong(3, this.getNivelCuenta());
-            stmt.setLong(4, this.getNivelClasificatorias());
+            stmt.setLong(3, this.getJugador_id());
+            stmt.setLong(4, this.getNivelCuenta());
+            stmt.setLong(5, this.getNivelClasificatorias());
             stmt.executeUpdate();
             conexion.close();
             return true;
@@ -48,15 +57,17 @@ public class Usuario implements InicioDeSesion {
         }
     }
 
-    public boolean editar() {
-        String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`nivelCuenta`=?,`nivelClasificatorias`=? WHERE nombre = ?";
+
+	public boolean editar() {
+        String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`jugador_id`=? ,`nivelCuenta`=?,`nivelClasificatorias`=? WHERE nombre = ?";
         try {
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, this.getNombre());
             stmt.setString(2, this.getContrasena());
-            stmt.setLong(3, this.getNivelCuenta());
-            stmt.setLong(4, this.getNivelClasificatorias());
-            stmt.setString(5, this.getNombre());
+            stmt.setLong(3, jugador_id);
+            stmt.setLong(4, this.getNivelCuenta());
+            stmt.setLong(5, this.getNivelClasificatorias());
+            stmt.setString(6, this.getNombre());
             stmt.executeUpdate();
             conexion.close();
             return true;
@@ -137,7 +148,32 @@ public class Usuario implements InicioDeSesion {
         this.contrasena = contrasena;
     }
     
-    @Override
+	public int getJugador_id() {
+		return jugador_id;
+	}
+
+	public void setJugador_id(int jugador_id) {
+		this.jugador_id = jugador_id;
+	}
+
+	public List<Partida> getHistorial() {
+		return historial;
+	}
+
+	public void setHistorial(List<Partida> historial) {
+		this.historial = historial;
+	}
+	
+	 public void setPersonaje(Personaje personaje) {
+	        this.personaje = personaje;
+	    }
+
+	 public Personaje getPersonaje() {
+		    return personaje;
+		}
+
+
+	@Override
     public void menu() {
         // Implementa el menú de Usuario
     }
