@@ -14,6 +14,27 @@ public class SistemaJuego implements InicioDeSesion {
     }
 
     @Override
+	public String toString() {
+		return "SistemaJuego [conexion=" + conexion + ", stmt=" + stmt + "]";
+	}
+
+	public Connection getConexion() {
+		return conexion;
+	}
+
+	public void setConexion(Connection conexion) {
+		this.conexion = conexion;
+	}
+
+	public PreparedStatement getStmt() {
+		return stmt;
+	}
+
+	public void setStmt(PreparedStatement stmt) {
+		this.stmt = stmt;
+	}
+
+	@Override
     public void menu() {
         // Implementa el menú de opciones después de iniciar sesión aquí
     }
