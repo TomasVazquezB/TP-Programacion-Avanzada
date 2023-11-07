@@ -12,6 +12,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import javax.swing.JTextField;
 
 public class Project_Versus extends JFrame {
 
@@ -43,35 +45,36 @@ public class Project_Versus extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alumno\\Desktop\\icono.jpg"));
 		setTitle("Project Versus");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 578, 403);
+		setBounds(100, 100, 836, 551);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Bienvenido al menu, que desea realizar?");
-		lblNewLabel.setBounds(129, 32, 325, 50);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		contentPane.add(lblNewLabel);
-		
-		JButton btnNewButton = new JButton("Iniciar Sesion");
-		btnNewButton.setBounds(31, 186, 140, 67);
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		contentPane.add(btnNewButton);
-		
 		JButton btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setBounds(213, 186, 140, 67);
+		btnRegistrar.setBounds(319, 344, 179, 80);
 		btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		contentPane.add(btnRegistrar);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setBounds(394, 186, 140, 67);
+		btnSalir.setBounds(610, 344, 179, 80);
 		btnSalir.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(btnSalir);
+		contentPane.add(btnRegistrar);
+		
+		JButton btnNewButton = new JButton("Iniciar Sesion");
+		btnNewButton.setBounds(50, 344, 179, 80);
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		contentPane.add(btnNewButton);
+		
+		JLabel lblNewLabel = new JLabel("Bienvenido al menu, que desea realizar?");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Alumno\\Desktop\\menu de inicio.jpg"));
+		lblNewLabel.setBounds(-174, -14, 1095, 546);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		contentPane.add(lblNewLabel);
 	}
 }
