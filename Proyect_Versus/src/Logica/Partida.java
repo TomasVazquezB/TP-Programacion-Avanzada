@@ -1,4 +1,5 @@
 package Logica;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +55,9 @@ public class Partida {
         }
     }
 
-
     private List<Personaje> obtenerPersonajesDisponibles() {
         List<Personaje> personajesDisponibles = new ArrayList<>();
-        String jdbcUrl = "jdbc:mysql://localhost:3463/TuBaseDeDatos";
+        String jdbcUrl = "jdbc:mysql://localhost:3463/BD Juego Por Turnos";
         String usuario = "tuUsuario";
         String contrasena = "tuContrasena";
 
@@ -103,7 +103,7 @@ public class Partida {
     }
 
     private void registrarPartida(Usuario usuario, String resultado) {
-        String jdbcUrl = "jdbc:mysql://localhost:3463/TuBaseDeDatos";
+        String jdbcUrl = "jdbc:mysql://localhost:3463/BD Juego Por Turnos";
         String usuarioDB = "tuUsuario";
         String contrasenaDB = "tuContrasena";
 

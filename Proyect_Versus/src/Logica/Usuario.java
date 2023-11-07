@@ -1,11 +1,11 @@
 package Logica;
 
-import Logica.*;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Usuario implements InicioDeSesion {
+	
     private String nombre;
     private String contrasena;
     private int nivelCuenta;
@@ -14,13 +14,11 @@ public class Usuario implements InicioDeSesion {
     private List<Partida> historial; //Hacer una sentencia que muestre el historial de los usuarios por ID
     private Personaje personaje;
 
-    
     // Agrega la instancia de conexión a la base de datos
     private Conexion con = new Conexion();
     private Connection conexion = con.conectar();
     private PreparedStatement stmt;
     
-
     public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
         this.contrasena = contrasena;
@@ -32,6 +30,16 @@ public class Usuario implements InicioDeSesion {
 
     //Crear el constructor
    
+    public Usuario (String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias, int jugador_id,List<Partida> historial) {
+    	super();
+    	this.nombre = nombre;
+    	this.contrasena = contrasena;
+    	this.nivelCuenta = nivelCuenta;
+    	this.nivelClasificatorias = nivelClasificatorias;
+    	this.jugador_id = jugador_id;
+    	this.historial = historial;
+    }
+      
     public Usuario(String nombre) {
         this.nombre = nombre;
         this.contrasena = "contrasena_maquina"; // Contraseña para la máquina (puedes personalizarla)
@@ -57,17 +65,15 @@ public class Usuario implements InicioDeSesion {
         }
     }
 
-
 	public boolean editar() {
         String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`jugador_id`=? ,`nivelCuenta`=?,`nivelClasificatorias`=? WHERE nombre = ?";
         try {
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, this.getNombre());
             stmt.setString(2, this.getContrasena());
-            stmt.setLong(3, jugador_id);
+            stmt.setLong(3, this.getJugador_id());
             stmt.setLong(4, this.getNivelCuenta());
             stmt.setLong(5, this.getNivelClasificatorias());
-            stmt.setString(6, this.getNombre());
             stmt.executeUpdate();
             conexion.close();
             return true;
@@ -171,7 +177,6 @@ public class Usuario implements InicioDeSesion {
 	 public Personaje getPersonaje() {
 		    return personaje;
 		}
-
 
 	@Override
     public void menu() {

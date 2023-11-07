@@ -27,7 +27,6 @@ public class Personaje {
 
     }
         
-  
     @Override
 	public String toString() {
 		return "Personaje [nombre=" + nombre + ", tipo=" + tipo + ", habilidades=" + habilidades + ", vida=" + vida
