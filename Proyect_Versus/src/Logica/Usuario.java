@@ -30,7 +30,7 @@ public class Usuario implements InicioDeSesion {
 
     //Crear el constructor
    
-    public Usuario (new Usuario(String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias, int jugador_id,List<Partida> historial)) {
+    public Usuario (String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias, int jugador_id,List<Partida> historial) {
     	this.nombre = nombre;
     	this.contrasena = contrasena;
     	this.nivelCuenta = nivelCuenta;

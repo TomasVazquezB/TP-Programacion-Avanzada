@@ -61,7 +61,7 @@ public class MenuPrincipal extends JFrame {
 		contentPane.add(botondesalir);
 		
 		JLabel menu = new JLabel("");
-		menu.setBounds(-301, -114, 1200, 875);
+		menu.setBounds(-284, -113, 1200, 875);
 		menu.setIcon(new ImageIcon("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\menu de inicio.jpg"));
 		contentPane.add(menu);
 	}

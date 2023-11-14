@@ -15,7 +15,9 @@ public class Proyect_versus {
         Conexion conexion = new Conexion();
         Connection connection = conexion.conectar();
         Validador sistema = new Validador(connection);
-
+        PantallaDeInicio inicio = new PantallaDeInicio();
+		inicio.run();
+		
         while (true) {
 
             String[] opciones = { "Registrar Usuario", "Iniciar Sesion", "Salir" };
