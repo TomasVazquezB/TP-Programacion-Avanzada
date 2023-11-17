@@ -58,9 +58,9 @@ public class PantallaDeInicio extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel titulo = new JLabel("Bienevidos al menu, que desea realizar?");
+		JLabel titulo = new JLabel("Bienvenido a Project Versus");
 		titulo.setFont(new Font("Tahoma", Font.PLAIN, 28));
-		titulo.setBounds(163, 0, 505, 119);
+		titulo.setBounds(220, 11, 505, 119);
 		contentPane.add(titulo);
 		
 		registrocontraseña = new JTextField();
@@ -78,12 +78,11 @@ public class PantallaDeInicio extends JFrame {
 				 Conexion conexion = new Conexion();
 			        Connection connection = conexion.conectar();
 			        Validador sistema = new Validador(connection);
-			        IngresoContraseña.getText();
-			        registrocontraseña.getText();
-				 Usuario usuarioLogueado = sistema.ValidarIngreso(IngresoContraseña.getText(), registrocontraseña.getText());
-				 if (usuarioLogueado != null) {
+			
+				 if (sistema.ValidarIngreso(IngresoNombre.getText(), IngresoContraseña.getText())!= null) {
                   MenuPrincipal pantalla = new MenuPrincipal();
                   pantalla.run();
+                  dispose();
               } else {
                   JOptionPane.showMessageDialog(null, "Inicio de sesión fallido. Credenciales incorrectas.","Error", JOptionPane.ERROR_MESSAGE);
               }
@@ -92,7 +91,7 @@ public class PantallaDeInicio extends JFrame {
 		});
 		contentPane.add(Ingresar);
 		
-		JLabel Contraseña = new JLabel("Contraseña");
+		JLabel Contraseña = new JLabel("Contraseña:");
 		Contraseña.setBounds(34, 281, 134, 20);
 		Contraseña.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		contentPane.add(Contraseña);
@@ -103,7 +102,7 @@ public class PantallaDeInicio extends JFrame {
 		registronombre.setColumns(10);
 		contentPane.add(registronombre);
 		
-		JLabel Nombre = new JLabel("Nombre");
+		JLabel Nombre = new JLabel("Nombre:");
 		Nombre.setBounds(34, 166, 134, 20);
 		Nombre.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		contentPane.add(Nombre);
@@ -111,13 +110,27 @@ public class PantallaDeInicio extends JFrame {
 		JButton Salir = new JButton("Salir");
 		Salir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				
+		 JOptionPane.showMessageDialog(null, "Gracias por jugar. ¡Hasta Luego!", "Hasta Luego",JOptionPane.QUESTION_MESSAGE);
+				System.exit(0);
 			}
 		});
-		Salir.setBounds(335, 270, 169, 92);
+		Salir.setBounds(329, 268, 169, 92);
 		Salir.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(Salir);
 		
 		JButton Registrarse = new JButton("Registro");
+		Registrarse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				
+				
+				
+			}
+			
+		});
 		Registrarse.setBounds(56, 394, 121, 58);
 		Registrarse.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(Registrarse);
@@ -128,7 +141,7 @@ public class PantallaDeInicio extends JFrame {
 		IngresoContraseña.setColumns(10);
 		contentPane.add(IngresoContraseña);
 		
-		JLabel Contraseña_1 = new JLabel("Contraseña");
+		JLabel Contraseña_1 = new JLabel("Contraseña:");
 		Contraseña_1.setBounds(607, 281, 134, 20);
 		Contraseña_1.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		contentPane.add(Contraseña_1);
@@ -139,7 +152,7 @@ public class PantallaDeInicio extends JFrame {
 		IngresoNombre.setColumns(10);
 		contentPane.add(IngresoNombre);
 		
-		JLabel Nombre_1 = new JLabel("Nombre");
+		JLabel Nombre_1 = new JLabel("Nombre:");
 		Nombre_1.setBounds(607, 166, 134, 20);
 		Nombre_1.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		contentPane.add(Nombre_1);
