@@ -6,9 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import Logica.Partida;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -67,10 +64,6 @@ public class MenuPrincipal extends JFrame {
 		botondecrearpartida.setBounds(190, 217, 121, 58);
 		botondecrearpartida.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(botondecrearpartida);
-		
-		//Partida tutorial = new Partida (null);
-		//tutorial.jugar();
-		
 		
 		JButton botondesalir = new JButton("Salir");
 		botondesalir.addActionListener(new ActionListener() {

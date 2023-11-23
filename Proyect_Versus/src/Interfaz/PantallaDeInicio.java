@@ -68,15 +68,15 @@ public class PantallaDeInicio extends JFrame {
 		registrocontraseña.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(registrocontraseña);
 		registrocontraseña.setColumns(10);
-		 Conexion conexion = new Conexion();
-	        Connection connection = conexion.conectar();
+		
 		JButton Ingresar = new JButton("Ingresar");
 		Ingresar.setBounds(638, 394, 121, 58);
 		Ingresar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Ingresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
+				 Conexion conexion = new Conexion();
+			        Connection connection = conexion.conectar();
 			        Validador sistema = new Validador(connection);
 			
 				 if (sistema.ValidarIngreso(IngresoNombre.getText(), IngresoContraseña.getText())!= null) {
@@ -124,29 +124,11 @@ public class PantallaDeInicio extends JFrame {
 		Registrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-		        Validador sistema = new Validador(connection);
-		      
-		         if (registronombre == null || registronombre.getText().isEmpty()) {
-		            JOptionPane.showMessageDialog(null, "El nombre de usuario no puede estar vacío. Intente nuevamente.","Error", JOptionPane.ERROR_MESSAGE);
-		            return;
-		        }
-
-		        if (registrocontraseña == null || registrocontraseña.getText().isEmpty()) {
-		            JOptionPane.showMessageDialog(null, "La contraseña no puede estar vacía. Intente nuevamente.", "Error",JOptionPane.ERROR_MESSAGE);
-		            return;
-		      
-				}else {
-					
-					Usuario nuevo = new Usuario(registronombre.getText(),registrocontraseña.getText());
-					   if (sistema.registrarUsuario(nuevo)) {
-				            JOptionPane.showMessageDialog(null, "Registro exitoso", "Registro finalizado", JOptionPane.INFORMATION_MESSAGE);
-				            registronombre.setText("");
-				            registrocontraseña.setText("");
-				        } else {
-				            JOptionPane.showMessageDialog(null, "El nombre de usuario ya está en uso. Intente con otro nombre.", "Error",JOptionPane.ERROR_MESSAGE);
-				        }
-				    }
-				}	
+				
+				
+				
+				
+			}
 			
 		});
 		Registrarse.setBounds(56, 394, 121, 58);
