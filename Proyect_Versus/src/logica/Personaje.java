@@ -1,4 +1,4 @@
-package logica;
+package Logica;
 
 import javax.swing.*;
 
@@ -83,5 +83,10 @@ public void reducirVida(int cantidad) {
     if (vida < 0) {
         vida = 0; // Asegura que la vida no sea negativa
     }
+}
+
+public int getId() {
+	// TODO Auto-generated method stub
+	return 0;
 }
 }

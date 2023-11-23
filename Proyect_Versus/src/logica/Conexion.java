@@ -1,6 +1,7 @@
 package Logica;
 
 import javax.swing.*;
+
 import java.sql.*;
 
 public class Conexion {

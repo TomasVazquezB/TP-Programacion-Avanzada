@@ -2,10 +2,14 @@ package Interfaz;
 
 import java.awt.EventQueue;
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import Logica.Usuario;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -56,9 +60,15 @@ public class MenuPrincipal extends JFrame {
 		contentPane.add(textomenu);
 		
 		JButton botondearmarequipo = new JButton("Armar Equipo");
-		botondearmarequipo.setBounds(10, 217, 121, 58);
-		botondearmarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		contentPane.add(botondearmarequipo);
+        botondearmarequipo.setBounds(10, 217, 121, 58);
+        botondearmarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        botondearmarequipo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Usuario.armarEquipo();
+            }
+        });
+        contentPane.add(botondearmarequipo);
+		
 		
 		JButton botondecrearpartida = new JButton("Crear Partida");
 		botondecrearpartida.setBounds(190, 217, 121, 58);

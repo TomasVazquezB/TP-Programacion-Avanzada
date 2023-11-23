@@ -2,6 +2,7 @@ package BD;
 
 import javax.swing.*;
 
+
 import java.sql.*;
 
 public class Conexion {

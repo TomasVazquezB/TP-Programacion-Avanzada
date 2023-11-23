@@ -1,11 +1,12 @@
-package interfaz;
+package Interfaz;
 
 import javax.swing.*;
+
 
 import BD.Conexion;
 
 import java.sql.*;
-import logica.*;
+import Logica.*;
 import java.util.ArrayList;
 import java.util.List;
 

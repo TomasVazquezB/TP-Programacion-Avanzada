@@ -1,6 +1,7 @@
-package logica;
+package Logica;
 
 import java.sql.*;
+
 
 import java.util.ArrayList;
 import java.util.List;

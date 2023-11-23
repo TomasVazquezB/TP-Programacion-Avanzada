@@ -1,9 +1,11 @@
-package logica;
+package Logica;
 
 import java.sql.*;
-
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import BD.Conexion;
 
@@ -123,6 +125,90 @@ public class Usuario implements InicioDeSesion {
             return null;
         }
     }
+    
+    
+    public void armarEquipo(Usuario usuario) {
+	    List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
+	    List<Personaje> equipo = new ArrayList<>();
+
+	    for (int i = 0; i < 4; i++) {
+	        // Muestra los personajes disponibles y permite al usuario seleccionar uno
+	        Personaje seleccionado = mostrarPersonajesYObtenerSeleccion(personajesDisponibles);
+	        if (seleccionado != null) {
+	            equipo.add(seleccionado);
+	            personajesDisponibles.remove(seleccionado);
+	        } else {
+	            // El usuario canceló la selección de personajes
+	            return;
+	        }
+	    }
+
+	    // Guarda el equipo en la base de datos
+	    guardarEquipoEnBaseDeDatos(usuario, equipo);
+	}
+    
+    public List<Personaje> obtenerPersonajesDisponibles() {
+    List<Personaje> personajesDisponibles = new ArrayList<>();
+    String jdbcUrl = "jdbc:mysql://localhost:3463/BD Juego Por Turnos";
+    String usuario = "tuUsuario";
+    String contrasena = "tuContrasena";
+
+    try {
+        Connection conexion = DriverManager.getConnection(jdbcUrl, usuario, contrasena);
+        String sql = "SELECT * FROM Personajes";
+        Statement statement = conexion.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+
+        while (rs.next()) {
+            String nombre = rs.getString("nombre");
+            int vida = rs.getInt("vida");
+            // Asume que tienes un constructor en la clase Personaje que acepta nombre y vida
+            Personaje personaje = new Personaje(nombre, nombre, null, vida); 
+            personajesDisponibles.add(personaje);
+        }
+
+        rs.close();
+        statement.close();
+        conexion.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return personajesDisponibles;
+}
+
+	public Personaje mostrarPersonajesYObtenerSeleccion(List<Personaje> personajesDisponibles) {
+        Object[] opcionesPersonajes = personajesDisponibles.toArray();
+        Object seleccion = JOptionPane.showInputDialog(null, "Selecciona un personaje para tu equipo:",
+                "Selección de Personaje", JOptionPane.QUESTION_MESSAGE, null, opcionesPersonajes, opcionesPersonajes[0]);
+
+        if (seleccion != null) {
+            return (Personaje) seleccion;
+        } else {
+            return null;
+        }
+    }
+
+    public void guardarEquipoEnBaseDeDatos(Usuario usuario, List<Personaje> equipo) {
+        String jdbcUrl = "jdbc:mysql://localhost:3463/BD Juego Por Turnos";
+        String usuarioDB = "tuUsuario";
+        String contrasenaDB = "tuContrasena";
+
+        try {
+            Connection conexion = DriverManager.getConnection(jdbcUrl, usuarioDB, contrasenaDB);
+            for (Personaje personaje : equipo) {
+                String sql = "INSERT INTO equipo (usuario_id, personaje_id) VALUES (?, ?)";
+                PreparedStatement statement = conexion.prepareStatement(sql);
+                statement.setInt(1, this.getJugador_id());
+                statement.setInt(2, personaje.getId()); // Asume que tienes un método getId() en Personaje
+                statement.executeUpdate();
+                statement.close();
+            }
+            conexion.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public int getNivelCuenta() {
         return nivelCuenta;
@@ -194,4 +280,6 @@ public class Usuario implements InicioDeSesion {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 }
