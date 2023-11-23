@@ -6,6 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="lib" path="C:/Users/Alumno/Desktop/mysql-connector-java-5.1.7-bin.jar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
