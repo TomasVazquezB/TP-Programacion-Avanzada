@@ -1,0 +1,5 @@
+INDEX VERSION 1.134+C:\Users\EXCOFIER\Documents\GitHub\TP-Programacion-Avanzada\.metadata\.plugins\org.eclipse.jdt.core
+382904305.index
+1206333860.index
+1511052661.index
+1865797976.index
