@@ -79,10 +79,10 @@ public class PantallaDeInicio extends JFrame {
 				 Conexion conexion = new Conexion();
 			        Connection connection = conexion.conectar();
 			        Validador sistema = new Validador(connection);
-			
-				 if (sistema.ValidarIngreso(IngresoNombre.getText(), IngresoContraseña.getText())!= null) {
-                  MenuPrincipal pantalla = new MenuPrincipal();
-                  pantalla.run();
+			        Usuario usuario = sistema.ValidarIngreso(IngresoNombre.getText(), IngresoContraseña.getText());
+			        if (usuario!= null) {
+                  MenuPrincipal pantalla = new MenuPrincipal(usuario);
+                  pantalla.run(usuario);
                   dispose();
               } else {
                   JOptionPane.showMessageDialog(null, "Inicio de sesión fallido. Credenciales incorrectas.","Error", JOptionPane.ERROR_MESSAGE);

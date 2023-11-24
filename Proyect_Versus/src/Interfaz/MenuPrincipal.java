@@ -25,14 +25,13 @@ public class MenuPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
 	/**
 	 * Launch the application.
 	 */
 
-			public void run() {
+			public void run(Usuario usuarioquepaso) {
 				try {
-					MenuPrincipal frame = new MenuPrincipal();
+					MenuPrincipal frame = new MenuPrincipal(usuarioquepaso);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +42,7 @@ public class MenuPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuPrincipal() {
+	public MenuPrincipal(Usuario usuario) {
 		setTitle("Project Versus");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\icono.jpg"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,7 +63,7 @@ public class MenuPrincipal extends JFrame {
         botondearmarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
         botondearmarequipo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Usuario.armarEquipo();
+            	usuario.armarEquipo(usuario);
             }
         });
         contentPane.add(botondearmarequipo);

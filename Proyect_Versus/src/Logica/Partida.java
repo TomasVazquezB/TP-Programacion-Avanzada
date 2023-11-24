@@ -95,13 +95,13 @@ public class Partida {
     private void realizarAtaque(Usuario atacante, Personaje atacantePersonaje, Usuario defensor, Personaje defensorPersonaje) {
         int dano = 10; // Daño fijo
         defensorPersonaje.reducirVida(dano);
-        JOptionPane.showMessageDialog(null, atacante.getNombre() + " ataca a " + defensor.getNombre() + " y causa " + dano + " de daño.");
+        JOptionPane.showMessageDialog(null, atacante.getNombre() + " Ataca a " + defensor.getNombre() + "Y Causa " + dano + " De Daño.");
     }
 
     private void realizarAtaqueMaquina(Usuario jugador, Personaje jugadorPersonaje, Usuario maquina, Personaje maquinaPersonaje) {
         int dano = 8; // Daño fijo de la máquina
         jugadorPersonaje.reducirVida(dano);
-        JOptionPane.showMessageDialog(null, maquina.getNombre() + " ataca a " + jugador.getNombre() + " y causa " + dano + " de daño.");
+        JOptionPane.showMessageDialog(null, maquina.getNombre() + " Ataca a " + jugador.getNombre() + " Y Causa " + dano + " De Daño.");
     }
 
     private void registrarPartida(Usuario usuario, String resultado) {

@@ -141,41 +141,36 @@ public class Usuario implements InicioDeSesion {
 	            // El usuario canceló la selección de personajes
 	            return;
 	        }
-	    }
-
 	    // Guarda el equipo en la base de datos
 	    guardarEquipoEnBaseDeDatos(usuario, equipo);
 	}
+    }
     
     public List<Personaje> obtenerPersonajesDisponibles() {
-    List<Personaje> personajesDisponibles = new ArrayList<>();
-    String jdbcUrl = "jdbc:mysql://localhost:3463/BD Juego Por Turnos";
-    String usuario = "tuUsuario";
-    String contrasena = "tuContrasena";
+        List<Personaje> personajesDisponibles = new ArrayList<>();
 
-    try {
-        Connection conexion = DriverManager.getConnection(jdbcUrl, usuario, contrasena);
-        String sql = "SELECT * FROM Personajes";
-        Statement statement = conexion.createStatement();
-        ResultSet rs = statement.executeQuery(sql);
+        try {
+            String sql = "SELECT p.nombre AS nombre, e.hp AS hp " +
+                         "FROM personaje p " +
+                         "INNER JOIN estadistica e ON p.Estadistica_id_Estadistica = e.id_Estadistica";
+            
+            Statement statement = conexion.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
 
-        while (rs.next()) {
-            String nombre = rs.getString("nombre");
-            int vida = rs.getInt("vida");
-            // Asume que tienes un constructor en la clase Personaje que acepta nombre y vida
-            Personaje personaje = new Personaje(nombre, nombre, null, vida); 
-            personajesDisponibles.add(personaje);
+            while (rs.next()) {
+                String nombre = rs.getString("nombre");
+                int hp = rs.getInt("hp");
+                // Asume que tienes un constructor en la clase Personaje que acepta nombre y vida
+                Personaje personaje = new Personaje(nombre, nombre, null, hp);
+                personajesDisponibles.add(personaje);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        rs.close();
-        statement.close();
-        conexion.close();
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return personajesDisponibles;
     }
 
-    return personajesDisponibles;
-}
 
 	public Personaje mostrarPersonajesYObtenerSeleccion(List<Personaje> personajesDisponibles) {
         Object[] opcionesPersonajes = personajesDisponibles.toArray();
@@ -190,12 +185,8 @@ public class Usuario implements InicioDeSesion {
     }
 
     public void guardarEquipoEnBaseDeDatos(Usuario usuario, List<Personaje> equipo) {
-        String jdbcUrl = "jdbc:mysql://localhost:3463/BD Juego Por Turnos";
-        String usuarioDB = "tuUsuario";
-        String contrasenaDB = "tuContrasena";
-
+  
         try {
-            Connection conexion = DriverManager.getConnection(jdbcUrl, usuarioDB, contrasenaDB);
             for (Personaje personaje : equipo) {
                 String sql = "INSERT INTO equipo (usuario_id, personaje_id) VALUES (?, ?)";
                 PreparedStatement statement = conexion.prepareStatement(sql);
@@ -280,6 +271,14 @@ public class Usuario implements InicioDeSesion {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public String toString() {
+		return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
+				+ ", nivelClasificatorias=" + nivelClasificatorias + ", jugador_id=" + jugador_id + ", historial="
+				+ historial + ", personaje=" + personaje + "]";
+	}
+	
 
 	
 }
