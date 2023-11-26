@@ -1,6 +1,8 @@
 package Logica;
 
 import java.sql.*;
+
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +25,7 @@ public class Usuario implements InicioDeSesion {
     private Conexion con = new Conexion();
     private Connection conexion = con.conectar();
     private PreparedStatement stmt;
+	private List<Personaje> equipo;
     
     public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
@@ -30,7 +33,8 @@ public class Usuario implements InicioDeSesion {
         this.nivelCuenta = 1;
         this.nivelClasificatorias = 1;
         this.historial = new LinkedList<>();
-        this.jugador_id = 0;
+        this.jugador_id = con.obtenerIdJugador(conexion,nombre, contrasena);
+        
     }
 
     //Crear el constructor
@@ -128,22 +132,32 @@ public class Usuario implements InicioDeSesion {
     
     
     public void armarEquipo(Usuario usuario) {
-	    List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
-	    List<Personaje> equipo = new ArrayList<>();
+    	//
+    	con.eliminarEquipo(usuario);
+    	
+        List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
+        List<Personaje> equipo = new ArrayList<>();
 
-	    for (int i = 0; i < 4; i++) {
-	        // Muestra los personajes disponibles y permite al usuario seleccionar uno
-	        Personaje seleccionado = mostrarPersonajesYObtenerSeleccion(personajesDisponibles);
-	        if (seleccionado != null) {
-	            equipo.add(seleccionado);
-	            personajesDisponibles.remove(seleccionado);
-	        } else {
-	            // El usuario canceló la selección de personajes
-	            return;
-	        }
-	    // Guarda el equipo en la base de datos
-	    guardarEquipoEnBaseDeDatos(usuario, equipo);
-	}
+        for (int i = 0; i < 4; i++) {
+            // Muestra los personajes disponibles y permite al usuario seleccionar uno
+            Personaje seleccionado = mostrarPersonajesYObtenerSeleccion(personajesDisponibles);
+            if (seleccionado != null) {
+                equipo.add(seleccionado);
+                personajesDisponibles.remove(seleccionado);
+            } else {
+                // El usuario canceló la selección de personajes
+                JOptionPane.showMessageDialog(null, "Selección de personajes cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+        }
+
+        // Después de seleccionar todo el equipo, guárdalo en la base de datos
+        boolean exito = con.guardarEquipoEnBaseDeDatos(usuario, equipo);
+        if (exito) {
+            JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente en la base de datos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Error al guardar el equipo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public List<Personaje> obtenerPersonajesDisponibles() {
@@ -184,21 +198,27 @@ public class Usuario implements InicioDeSesion {
         }
     }
 
-    public void guardarEquipoEnBaseDeDatos(Usuario usuario, List<Personaje> equipo) {
-  
-        try {
-            for (Personaje personaje : equipo) {
-                String sql = "INSERT INTO equipo (usuario_id, personaje_id) VALUES (?, ?)";
-                PreparedStatement statement = conexion.prepareStatement(sql);
-                statement.setInt(1, this.getJugador_id());
-                statement.setInt(2, personaje.getId()); // Asume que tienes un método getId() en Personaje
-                statement.executeUpdate();
-                statement.close();
-            }
-            conexion.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    
+    
+    
+    public List<Personaje> getEquipo() {
+		return equipo;
+	}
+
+	public void setEquipo(List<Personaje> equipo) {
+        // Primero, podrías querer validar el equipo (por ejemplo, asegurarte de que no tenga más de 4 personajes)
+        if (equipo.size() > 4) {
+            throw new IllegalArgumentException("El equipo no puede tener más de 4 personajes");
         }
+
+        // Luego, guarda el equipo en la base de datos
+        boolean exito = con.guardarEquipoEnBaseDeDatos(this, equipo);
+        if (!exito) {
+            throw new RuntimeException("Hubo un problema al guardar el equipo en la base de datos");
+        }
+
+        // Establece el equipo del usuario
+        this.equipo = equipo;
     }
 
     public int getNivelCuenta() {
@@ -267,10 +287,7 @@ public class Usuario implements InicioDeSesion {
         // Implementa la lógica para cerrar la sesión
     }
 
-	public void setEquipo(List<Personaje> equipo) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public String toString() {

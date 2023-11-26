@@ -3,6 +3,7 @@ package Interfaz;
 import java.awt.EventQueue;
 
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -94,4 +95,8 @@ public class MenuPrincipal extends JFrame {
 		menu.setIcon(new ImageIcon("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\menu de inicio.jpg"));
 		contentPane.add(menu);
 	}
+	
+	
+	
+
 }

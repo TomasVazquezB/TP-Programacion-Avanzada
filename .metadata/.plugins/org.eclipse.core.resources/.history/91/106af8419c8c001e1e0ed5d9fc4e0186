@@ -1,0 +1,105 @@
+package BD;
+
+import javax.swing.*;
+
+import Logica.Personaje;
+import Logica.Usuario;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+public class Conexion {
+
+    private static Connection con;
+
+    private Conexion() {
+        // Constructor privado para evitar la creación de instancias fuera de la clase
+    }
+
+    public static Connection conectar() throws SQLException {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3463/bd juego por turnos", "root", "");
+            // JOptionPane.showMessageDialog(null, "Conexión exitosa");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al cargar el controlador de la base de datos");
+            throw new SQLException("Error al cargar el controlador de la base de datos", e);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al conectarse a la base de datos");
+            throw e;
+        }
+
+        return con;
+    }
+
+    public static boolean validarConexion() {
+        try (Connection con = conectar()) {
+            JOptionPane.showMessageDialog(null, "Conexión exitosa");
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al conectarse");
+            return false;
+        }
+    }
+
+    public static boolean guardarEquipoEnBaseDeDatos(Usuario usuario, List<Personaje> equipo) {
+        try (Connection conn = conectar();
+             PreparedStatement stmt = conn.prepareStatement("INSERT INTO equipo (personaje_nombre, jugador_id) VALUES (?, ?)")) {
+
+            // Verificar que el jugador_id exista en la tabla jugador
+            if (!existeJugador(conn, usuario.getJugador_id())) {
+                JOptionPane.showMessageDialog(null, "El jugador con ID " + usuario.getJugador_id() + " no existe.");
+                return false;
+            }
+
+            // Comienza una transacción
+            conn.setAutoCommit(false);
+
+            // Para cada personaje en el equipo...
+            for (Personaje personaje : equipo) {
+                try {
+                    // Establece los valores de los parámetros
+                    stmt.setString(1, personaje.getNombre());
+                    stmt.setInt(2, usuario.getJugador_id());
+
+                    // Ejecuta la sentencia
+                    stmt.executeUpdate();
+                } catch (SQLException e) {
+                    // Si hay un error al insertar un personaje, imprime el error
+                    e.printStackTrace();
+
+                    // Realiza un rollback para deshacer la transacción
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // Si todo salió bien, confirma la transacción
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Método para verificar la existencia de un jugador por ID
+    private static boolean existeJugador(Connection conn, int jugadorId) {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT id FROM jugador WHERE id = ?")) {
+            stmt.setInt(1, jugadorId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Devuelve true si hay al menos una fila (jugador encontrado), false de lo contrario
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
