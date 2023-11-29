@@ -11,7 +11,6 @@ public class SistemaJuego implements InicioDeSesion {
     private PreparedStatement stmt;
 
     public SistemaJuego() {
-        // Inicializa la conexión a la base de datos
         Conexion con = new Conexion();
         conexion = con.conectar();
     }

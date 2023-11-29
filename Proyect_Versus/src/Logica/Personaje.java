@@ -1,38 +1,33 @@
 package Logica;
 
 import BD.Conexion;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import Logica.Estadistica;
-
 
 public class Personaje {
     private String nombre;
     private String tipo;
     private List<Habilidad> habilidades;
     private int vida;
-    private Estadistica estadisticas; // Agregamos el atributo de estadísticas
+    private Estadistica estadisticas; 
 
     public Personaje(String nombre, String tipo, String habilidades, int vida) {
         this.nombre = nombre;
         this.tipo = tipo;
-        this.habilidades = new ArrayList<>(); // Inicializar la lista de habilidades
-        // Asumiendo que deseas agregar la habilidad proporcionada al personaje
+        this.habilidades = new ArrayList<>(); 
         this.habilidades.add(new Habilidad(habilidades));
         this.vida = vida;
     }
-
-
+    
     public Personaje(String nombre, String tipo) {
-        this.nombre = nombre;
-        this.tipo = tipo;
+    	this.nombre = nombre;
+    	this.tipo = tipo;
     }
-
+    
     @Override
     public String toString() {
-        return "Personaje [nombre=" + nombre + ", tipo=" + tipo + ", habilidades=" + habilidades + ", vida=" + vida + "]";
+    	return "Personaje [nombre=" + nombre + ", tipo=" + tipo + ", habilidades=" + habilidades + ", vida=" + vida + "]";
     }
 
     public String getNombre() {
@@ -82,20 +77,17 @@ public class Personaje {
         vida -= cantidad;
 
         if (vida < 0) {
-            vida = 0; // Asegura que la vida no sea negativa
+            vida = 0; 
         }
     }
 
-    // Método para obtener las estadísticas del personaje desde la base de datos
     public Estadistica getEstadisticas() {
-        Conexion conexion = new Conexion(); // Instancia de la clase Conexion
+        Conexion conexion = new Conexion(); 
         this.estadisticas = conexion.obtenerEstadisticasPorNombre(nombre);
         return this.estadisticas;
     }
 
-    // Método para obtener el ID del personaje
     public int getId() {
-        // Lógica para obtener el ID del personaje
-        return 0; // Reemplazar con la lógica de obtención del ID
+        return 0; 
     }
 }

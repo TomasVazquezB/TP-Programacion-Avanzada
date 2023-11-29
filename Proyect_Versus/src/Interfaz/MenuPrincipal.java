@@ -16,9 +16,8 @@ import java.awt.event.ActionListener;
 public class MenuPrincipal extends JFrame {
 
     private JPanel contentPane;
-    private Conexion con; // Agrega una variable de conexión como campo de clase
+    private Conexion con; 
     
-
     public void run(Usuario usuario) {
         try {
             MenuPrincipal frame = new MenuPrincipal(usuario);
@@ -40,8 +39,6 @@ public class MenuPrincipal extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        
-        
         JLabel textomenu = new JLabel("¿Qué desea realizar?");
         textomenu.setFont(new Font("Tahoma", Font.PLAIN, 24));
         textomenu.setBounds(141, -20, 226, 123);
@@ -73,12 +70,14 @@ public class MenuPrincipal extends JFrame {
         con = new Conexion();
 
         JButton botonDetalles = new JButton("Detalles de Personajes");
-        botonDetalles.setBounds(10, 150, 150, 30);
         botonDetalles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarDetallesPersonajes(con);
             }
         });
+        
+        botonDetalles.setBounds(10, 150, 121, 58);
+        botonDetalles.setFont(new Font("Tahoma", Font.PLAIN,12));
         contentPane.add(botonDetalles);
 
         JButton botondesalir = new JButton("Salir");

@@ -1,16 +1,11 @@
 package Logica;
 
 import java.sql.*;
-
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-
 import BD.Conexion;
 
 public class Usuario implements InicioDeSesion {
@@ -20,10 +15,8 @@ public class Usuario implements InicioDeSesion {
     private int nivelCuenta;
     private int nivelClasificatorias;
     private int jugador_id;
-    private List<Partida> historial; //Hacer una sentencia que muestre el historial de los usuarios por ID
+    private List<Partida> historial; 
     private Personaje personaje;
-
-    // Agrega la instancia de conexión a la base de datos
     private Conexion con = new Conexion();
     private Connection conexion = con.conectar();
     private PreparedStatement stmt;
@@ -39,8 +32,6 @@ public class Usuario implements InicioDeSesion {
         
     }
 
-    //Crear el constructor
-   
     public Usuario (String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias, int jugador_id,List<Partida> historial) {
     	this.nombre = nombre;
     	this.contrasena = contrasena;
@@ -52,11 +43,74 @@ public class Usuario implements InicioDeSesion {
       
     public Usuario(String nombre) {
         this.nombre = nombre;
-        this.contrasena = "contrasena_maquina"; // Contraseña para la máquina (puedes personalizarla)
-        this.nivelCuenta = 1; // Nivel inicial para la máquina (puedes personalizarlo)
-        this.nivelClasificatorias = 10; // Nivel de clasificatorias para la máquina (puedes personalizarlo)
+        this.contrasena = "contrasena_maquina"; 
+        this.nivelCuenta = 1; 
+        this.nivelClasificatorias = 10; 
     }
 
+    @Override
+    public String toString() {
+    	return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
+    			+ ", nivelClasificatorias=" + nivelClasificatorias + ", jugador_id=" + jugador_id + ", historial="
+    			+ historial + ", personaje=" + personaje + "]";
+    }
+
+    public int getNivelCuenta() {
+    	return nivelCuenta;
+    }
+    
+    public void setNivelCuenta(int nivelCuenta) {
+    	this.nivelCuenta = nivelCuenta;
+    }
+    
+    public int getNivelClasificatorias() {
+    	return nivelClasificatorias;
+    }
+    
+    public void setNivelClasificatorias(int nivelClasificatorias) {
+    	this.nivelClasificatorias = nivelClasificatorias;
+    }
+    
+    public String getNombre() {
+    	return nombre;
+    }
+    
+    public void setNombre(String nombre) {
+    	this.nombre = nombre;
+    }
+    
+    public String getContrasena() {
+    	return contrasena;
+    }
+    
+    public void setContrasena(String contrasena) {
+    	this.contrasena = contrasena;
+    }
+    
+    public int getJugador_id() {
+    	return jugador_id;
+    }
+    
+    public void setJugador_id(int jugador_id) {
+    	this.jugador_id = jugador_id;
+    }
+    
+    public List<Partida> getHistorial() {
+    	return historial;
+    }
+    
+    public void setHistorial(List<Partida> historial) {
+    	this.historial = historial;
+    }
+    
+    public void setPersonaje(Personaje personaje) {
+    	this.personaje = personaje;
+    }
+    
+    public Personaje getPersonaje() {
+    	return personaje;
+    }
+    
 	public boolean guardar() {
         String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `jugador_id`, `nivelCuenta`, `nivelClasificatorias`) VALUES (?,?,?,?,?)";
         try {
@@ -140,10 +194,7 @@ public class Usuario implements InicioDeSesion {
         List<Personaje> equipo = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
-            // Muestra los personajes disponibles y permite al usuario seleccionar uno
             Personaje seleccionado = mostrarPersonajesYObtenerSeleccion(personajesDisponibles);
-
-            // Verifica si el usuario canceló la selección
             if (seleccionado == null) {
                 JOptionPane.showMessageDialog(null, "Selección de personajes cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
@@ -153,7 +204,6 @@ public class Usuario implements InicioDeSesion {
             personajesDisponibles.remove(seleccionado);
         }
 
-        // Después de seleccionar todo el equipo, guárdalo en la base de datos
         boolean exito = con.guardarEquipoEnBaseDeDatos(usuario, equipo);
         if (exito) {
             JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente en la base de datos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -174,7 +224,6 @@ public class Usuario implements InicioDeSesion {
                 String nombre = rs.getString("nombre");
                 String tipo_de_personaje = rs.getString("tipo_de_personaje");
 
-                // Asume que tienes un constructor en la clase Personaje que acepta nombre y tipo
                 Personaje personaje = new Personaje(nombre, tipo_de_personaje);
                 personajesDisponibles.add(personaje);
             }
@@ -185,17 +234,12 @@ public class Usuario implements InicioDeSesion {
         return personajesDisponibles;
     }
 
-    
-    
-    
-
     public Personaje mostrarPersonajesYObtenerSeleccion(List<Personaje> personajesDisponibles) {
         if (personajesDisponibles.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay personajes disponibles", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-
-        // Crear un array de strings para mostrar solo el nombre y tipo en el JComboBox
+        
         String[] nombresYTipos = personajesDisponibles.stream()
                 .map(personaje -> personaje.getNombre() + " - " + personaje.getTipo())
                 .toArray(String[]::new);
@@ -209,24 +253,20 @@ public class Usuario implements InicioDeSesion {
         if (seleccion == JOptionPane.OK_OPTION) {
             String selectedItem = (String) comboBox.getSelectedItem();
             
-            // Extraer el nombre del personaje seleccionado (puedes ajustar esto según tu formato)
             String[] parts = selectedItem.split(" - ");
             String nombreSeleccionado = parts[0];
 
-            // Buscar el objeto Personaje correspondiente en la lista original
             for (Personaje personaje : personajesDisponibles) {
                 if (personaje.getNombre().equals(nombreSeleccionado)) {
                     return personaje;
                 }
             }
             
-            // Si no se encuentra el personaje, mostrar un mensaje y retornar null
             JOptionPane.showMessageDialog(null, "Personaje no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
-        // Devuelve un Personaje ficticio que represente la cancelación
-        return new Personaje("Cancelado", ""); // Ajusta según tu clase Personaje
+        return new Personaje("Cancelado", ""); 
     }
 
     public List<Personaje> getEquipo() {
@@ -234,76 +274,17 @@ public class Usuario implements InicioDeSesion {
 	}
 
 	public void setEquipo(List<Personaje> equipo) {
-        // Primero, podrías querer validar el equipo (por ejemplo, asegurarte de que no tenga más de 4 personajes)
         if (equipo.size() > 4) {
             throw new IllegalArgumentException("El equipo no puede tener más de 4 personajes");
         }
 
-        // Luego, guarda el equipo en la base de datos
         boolean exito = con.guardarEquipoEnBaseDeDatos(this, equipo);
         if (!exito) {
             throw new RuntimeException("Hubo un problema al guardar el equipo en la base de datos");
         }
 
-        // Establece el equipo del usuario
         this.equipo = equipo;
     }
-
-    public int getNivelCuenta() {
-        return nivelCuenta;
-    }
-
-    public void setNivelCuenta(int nivelCuenta) {
-        this.nivelCuenta = nivelCuenta;
-    }
-
-    public int getNivelClasificatorias() {
-        return nivelClasificatorias;
-    }
-
-    public void setNivelClasificatorias(int nivelClasificatorias) {
-        this.nivelClasificatorias = nivelClasificatorias;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
-    
-	public int getJugador_id() {
-		return jugador_id;
-	}
-
-	public void setJugador_id(int jugador_id) {
-		this.jugador_id = jugador_id;
-	}
-
-	public List<Partida> getHistorial() {
-		return historial;
-	}
-
-	public void setHistorial(List<Partida> historial) {
-		this.historial = historial;
-	}
-	
-	 public void setPersonaje(Personaje personaje) {
-	        this.personaje = personaje;
-	    }
-
-	 public Personaje getPersonaje() {
-		    return personaje;
-		}
 
 	@Override
     public void menu() {
@@ -313,17 +294,5 @@ public class Usuario implements InicioDeSesion {
     @Override
     public void cerrarSesion() {
         // Implementa la lógica para cerrar la sesión
-    }
-
-	
-
-	@Override
-	public String toString() {
-		return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
-				+ ", nivelClasificatorias=" + nivelClasificatorias + ", jugador_id=" + jugador_id + ", historial="
-				+ historial + ", personaje=" + personaje + "]";
-	}
-	
-
-	
+    }	
 }
