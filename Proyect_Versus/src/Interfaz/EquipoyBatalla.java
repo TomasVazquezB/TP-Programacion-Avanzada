@@ -2,8 +2,6 @@ package Interfaz;
 
 import java.awt.EventQueue;
 
-
-import BD.Conexion;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;

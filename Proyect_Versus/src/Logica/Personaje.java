@@ -4,7 +4,6 @@ import BD.Conexion;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import Logica.Estadistica;
 
 public class Personaje {
     private String nombre;

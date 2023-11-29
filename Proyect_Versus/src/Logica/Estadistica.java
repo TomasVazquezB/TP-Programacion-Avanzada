@@ -1,10 +1,5 @@
 package Logica;
 
-import BD.Conexion;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JOptionPane;
-
 public class Estadistica {
     private int hp;
     private int def;
@@ -16,6 +11,16 @@ public class Estadistica {
         this.def = def;
         this.er = er;
         this.em = em;
+    }
+
+    @Override
+    public String toString() {
+    	return "Estadistica{" +
+    			"hp=" + hp +
+    			", def=" + def +
+    			", er=" + er +
+    			", em=" + em +
+    			'}';
     }
 
 	    public int getHp() {
@@ -49,14 +54,4 @@ public class Estadistica {
 		public void setEm(int em) {
 			this.em = em;
 		}
-
-		@Override
-	    public String toString() {
-	        return "Estadistica{" +
-	                "hp=" + hp +
-	                ", def=" + def +
-	                ", er=" + er +
-	                ", em=" + em +
-	                '}';
-	    }
-	}
+}

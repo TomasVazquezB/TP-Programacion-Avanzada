@@ -1,15 +1,10 @@
 package Interfaz;
+
 import Logica.Partida;
-
-//Resto de tu código
-
-import java.awt.EventQueue;
-
-
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+
 import javax.swing.border.EmptyBorder;
 
 import Logica.Usuario;
@@ -42,8 +37,7 @@ public class MenuPrincipal extends JFrame {
 					e.printStackTrace();
 				}
 			}
-		
-
+			
 	/**
 	 * Create the frame.
 	 */
@@ -86,12 +80,10 @@ public class MenuPrincipal extends JFrame {
             }
         });
 
-		
 		JButton botondesalir = new JButton("Salir");
 		botondesalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
+						
 		JOptionPane.showMessageDialog(null, "Sesión cerrada. ¡Hasta luego!", "Sesion Cerrada",JOptionPane.QUESTION_MESSAGE);
 				System.exit(0);
 			}
@@ -100,15 +92,10 @@ public class MenuPrincipal extends JFrame {
 		botondesalir.setBounds(345, 217, 121, 58);
 		botondesalir.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		contentPane.add(botondesalir);
-		
-		
+			
 		JLabel menu = new JLabel("");
 		menu.setBounds(-347, -226, 1200, 875);
 		menu.setIcon(new ImageIcon("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\menu de inicio.jpg"));
 		contentPane.add(menu);
 	}
-	
-	
-	
-
 }
