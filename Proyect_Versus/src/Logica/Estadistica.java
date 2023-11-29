@@ -11,7 +11,6 @@ public class Estadistica {
     private int er;
     private int em;
 
-    // Constructor que acepta cuatro parámetros int
     public Estadistica(int hp, int def, int er, int em) {
         this.hp = hp;
         this.def = def;
@@ -23,49 +22,33 @@ public class Estadistica {
 			return hp;
 		}
 
-
-
 		public void setHp(int hp) {
 			this.hp = hp;
 		}
-
-
 
 		public int getDef() {
 			return def;
 		}
 
-
-
 		public void setDef(int def) {
 			this.def = def;
 		}
-
-
 
 		public int getEr() {
 			return er;
 		}
 
-
-
 		public void setEr(int er) {
 			this.er = er;
 		}
-
-
 
 		public int getEm() {
 			return em;
 		}
 
-
-
 		public void setEm(int em) {
 			this.em = em;
 		}
-
-
 
 		@Override
 	    public String toString() {
@@ -77,7 +60,3 @@ public class Estadistica {
 	                '}';
 	    }
 	}
-
-	
-	
-	
