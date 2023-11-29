@@ -1,13 +1,18 @@
 package Interfaz;
+import Logica.Partida;
+
+//Resto de tu código
 
 import java.awt.EventQueue;
+
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import Logica.Partida;
+import Logica.Usuario;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,19 +24,19 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Font;
+import BD.Conexion;
 
 public class MenuPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
 	/**
 	 * Launch the application.
 	 */
 
-			public void run() {
+			public void run(Usuario usuarioquepaso) {
 				try {
-					MenuPrincipal frame = new MenuPrincipal();
+					MenuPrincipal frame = new MenuPrincipal(usuarioquepaso);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,7 +47,7 @@ public class MenuPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuPrincipal() {
+	public MenuPrincipal(Usuario usuario) {
 		setTitle("Project Versus");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\icono.jpg"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,24 +58,36 @@ public class MenuPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel textomenu = new JLabel("Que desea realizar?");
+		JLabel textomenu = new JLabel("¿Qué desea realizar?");
 		textomenu.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		textomenu.setBounds(141, -20, 226, 123);
 		contentPane.add(textomenu);
 		
 		JButton botondearmarequipo = new JButton("Armar Equipo");
-		botondearmarequipo.setBounds(10, 217, 121, 58);
-		botondearmarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		contentPane.add(botondearmarequipo);
+        botondearmarequipo.setBounds(10, 217, 121, 58);
+        botondearmarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        botondearmarequipo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	usuario.armarEquipo(usuario);
+            }
+        });
+        contentPane.add(botondearmarequipo);
 		
-		JButton botondecrearpartida = new JButton("Crear Partida");
-		botondecrearpartida.setBounds(190, 217, 121, 58);
-		botondecrearpartida.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		contentPane.add(botondecrearpartida);
-		
-		//Partida tutorial = new Partida (null);
-		//tutorial.jugar();
-		
+        JButton botondecrearpartida = new JButton("Crear Partida");
+        botondecrearpartida.setBounds(190, 217, 121, 58);
+        botondecrearpartida.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        contentPane.add(botondecrearpartida);
+
+        botondecrearpartida.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Conexion conexion = new Conexion(); // Crear una instancia de Conexion si no está creada aún
+                // Crear una nueva partida con el usuario actual y la conexión
+                Partida nuevaPartida = new Partida(usuario, conexion);
+                // Ejecutar el método jugar() para iniciar la partida
+                nuevaPartida.jugar();
+            }
+        });
+
 		
 		JButton botondesalir = new JButton("Salir");
 		botondesalir.addActionListener(new ActionListener() {
@@ -92,4 +109,8 @@ public class MenuPrincipal extends JFrame {
 		menu.setIcon(new ImageIcon("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\menu de inicio.jpg"));
 		contentPane.add(menu);
 	}
+	
+	
+	
+
 }
