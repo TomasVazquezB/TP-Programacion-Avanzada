@@ -2,6 +2,7 @@ package Logica;
 
 import java.sql.*;
 
+
 import BD.Conexion;
 
 public class SistemaJuego implements InicioDeSesion {
@@ -52,3 +53,4 @@ public class SistemaJuego implements InicioDeSesion {
         // Implementa la lógica para crear una partida con jugadores
     }
 }
+
