@@ -80,10 +80,8 @@ public class MenuPrincipal extends JFrame {
 
         botondecrearpartida.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Conexion conexion = new Conexion(); // Crear una instancia de Conexion si no está creada aún
-                // Crear una nueva partida con el usuario actual y la conexión
+                Conexion conexion = new Conexion(); 
                 Partida nuevaPartida = new Partida(usuario, conexion);
-                // Ejecutar el método jugar() para iniciar la partida
                 nuevaPartida.jugar();
             }
         });

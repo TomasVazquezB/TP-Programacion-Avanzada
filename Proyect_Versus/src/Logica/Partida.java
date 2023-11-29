@@ -22,7 +22,7 @@ public class Partida {
     }
     
     public void jugar() {
-        while (jugadorTieneVida() && maquinaTieneVida()) {
+        while (jugadorTieneVida() && maquinaTieneVida()) { 
             realizarAtaque(jugador, jugadorPersonaje, maquina, maquinaPersonaje);
             if (!maquinaTieneVida()) {
                 JOptionPane.showMessageDialog(null, "¡Has derrotado a la máquina!");

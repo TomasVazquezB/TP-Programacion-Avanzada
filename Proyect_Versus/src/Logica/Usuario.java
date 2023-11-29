@@ -219,7 +219,7 @@ public class Usuario implements InicioDeSesion {
         List<Personaje> personajesDisponibles = new ArrayList<>();
 
         try {
-            String sql = "SELECT p.nombre AS nombre,e.hp AS hp " +"FROM personaje p " + "INNER JOIN estadistica e ON p.Estadistica_id_Estadistica = e.id_Estadistica";
+            String sql = "SELECT p.nombre AS nombre,e.hp AS hp " + "FROM personaje p " + "INNER JOIN estadistica e ON p.Estadistica_id_Estadistica = e.id_Estadistica";
             
             Statement statement = conexion.createStatement();
             ResultSet rs = statement.executeQuery(sql);

@@ -161,7 +161,7 @@ public int obtenerIdJugador(Connection conn, String nombre, String contrasena) {
         if (rs.next()) {
             return rs.getInt("jugador_id");
         } else {
-            JOptionPane.showMessageDialog(null, "El jugador no existe o las credenciales son incorrectas.");
+            //JOptionPane.showMessageDialog(null, "El jugador no existe o las credenciales son incorrectas.");
             return -1; // Indica un error o credenciales incorrectas
         }
     } catch (SQLException e) {
