@@ -4,12 +4,12 @@ import java.awt.EventQueue;
 
 
 
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Logica.Conexion;
 import Logica.Usuario;
 import Logica.Validador;
 
@@ -77,7 +77,7 @@ public class PantallaDeInicio extends JFrame {
 		Ingresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				 Conexion conexion = new Conexion();
+				 BD.Conexion conexion = new BD.Conexion();
 			        Connection connection = conexion.conectar();
 			        Validador sistema = new Validador(connection);
 			        Usuario usuario = sistema.ValidarIngreso(IngresoNombre.getText(), IngresoContraseña.getText());
@@ -125,8 +125,6 @@ public class PantallaDeInicio extends JFrame {
 		JButton Registrarse = new JButton("Registro");
 		Registrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
 				
 				
 				

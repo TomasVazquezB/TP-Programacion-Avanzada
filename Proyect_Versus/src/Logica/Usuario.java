@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import BD.Conexion;
@@ -132,23 +134,23 @@ public class Usuario implements InicioDeSesion {
     
     
     public void armarEquipo(Usuario usuario) {
-    	//
-    	con.eliminarEquipo(usuario);
-    	
+        con.eliminarEquipo(usuario);
+
         List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
         List<Personaje> equipo = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
             // Muestra los personajes disponibles y permite al usuario seleccionar uno
             Personaje seleccionado = mostrarPersonajesYObtenerSeleccion(personajesDisponibles);
-            if (seleccionado != null) {
-                equipo.add(seleccionado);
-                personajesDisponibles.remove(seleccionado);
-            } else {
-                // El usuario canceló la selección de personajes
+
+            // Verifica si el usuario canceló la selección
+            if (seleccionado == null) {
                 JOptionPane.showMessageDialog(null, "Selección de personajes cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
+
+            equipo.add(seleccionado);
+            personajesDisponibles.remove(seleccionado);
         }
 
         // Después de seleccionar todo el equipo, guárdalo en la base de datos
@@ -164,18 +166,16 @@ public class Usuario implements InicioDeSesion {
         List<Personaje> personajesDisponibles = new ArrayList<>();
 
         try {
-            String sql = "SELECT p.nombre AS nombre, e.hp AS hp " +
-                         "FROM personaje p " +
-                         "INNER JOIN estadistica e ON p.Estadistica_id_Estadistica = e.id_Estadistica";
-            
+            String sql = "SELECT nombre, tipo_de_personaje FROM personaje";
             Statement statement = conexion.createStatement();
             ResultSet rs = statement.executeQuery(sql);
 
             while (rs.next()) {
                 String nombre = rs.getString("nombre");
-                int hp = rs.getInt("hp");
-                // Asume que tienes un constructor en la clase Personaje que acepta nombre y vida
-                Personaje personaje = new Personaje(nombre, nombre, null, hp);
+                String tipo_de_personaje = rs.getString("tipo_de_personaje");
+
+                // Asume que tienes un constructor en la clase Personaje que acepta nombre y tipo
+                Personaje personaje = new Personaje(nombre, tipo_de_personaje);
                 personajesDisponibles.add(personaje);
             }
         } catch (SQLException e) {
@@ -185,22 +185,50 @@ public class Usuario implements InicioDeSesion {
         return personajesDisponibles;
     }
 
+    
+    
+    
 
-	public Personaje mostrarPersonajesYObtenerSeleccion(List<Personaje> personajesDisponibles) {
-        Object[] opcionesPersonajes = personajesDisponibles.toArray();
-        Object seleccion = JOptionPane.showInputDialog(null, "Selecciona un personaje para tu equipo:",
-                "Selección de Personaje", JOptionPane.QUESTION_MESSAGE, null, opcionesPersonajes, opcionesPersonajes[0]);
-
-        if (seleccion != null) {
-            return (Personaje) seleccion;
-        } else {
+    public Personaje mostrarPersonajesYObtenerSeleccion(List<Personaje> personajesDisponibles) {
+        if (personajesDisponibles.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay personajes disponibles", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
+
+        // Crear un array de strings para mostrar solo el nombre y tipo en el JComboBox
+        String[] nombresYTipos = personajesDisponibles.stream()
+                .map(personaje -> personaje.getNombre() + " - " + personaje.getTipo())
+                .toArray(String[]::new);
+
+        JComboBox<String> comboBox = new JComboBox<>(nombresYTipos);
+
+        int seleccion = JOptionPane.showOptionDialog(null, comboBox,
+                "Selecciona un personaje para tu equipo:", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+        if (seleccion == JOptionPane.OK_OPTION) {
+            String selectedItem = (String) comboBox.getSelectedItem();
+            
+            // Extraer el nombre del personaje seleccionado (puedes ajustar esto según tu formato)
+            String[] parts = selectedItem.split(" - ");
+            String nombreSeleccionado = parts[0];
+
+            // Buscar el objeto Personaje correspondiente en la lista original
+            for (Personaje personaje : personajesDisponibles) {
+                if (personaje.getNombre().equals(nombreSeleccionado)) {
+                    return personaje;
+                }
+            }
+            
+            // Si no se encuentra el personaje, mostrar un mensaje y retornar null
+            JOptionPane.showMessageDialog(null, "Personaje no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        // Devuelve un Personaje ficticio que represente la cancelación
+        return new Personaje("Cancelado", ""); // Ajusta según tu clase Personaje
     }
 
-    
-    
-    
     public List<Personaje> getEquipo() {
 		return equipo;
 	}

@@ -1,8 +1,10 @@
 package BD;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
-
+import Logica.Estadistica;
+import Logica.Habilidad;
 import Logica.Personaje;
 import Logica.Usuario;
 
@@ -208,7 +210,6 @@ public boolean eliminarEquipo(Usuario usuario) {
             conn.commit();
             return true;
         } catch (SQLException e) {
-            // Si hay un error, realiza un rollback para deshacer la transacción
             conn.rollback();
             e.printStackTrace();
             return false;
@@ -232,6 +233,251 @@ public boolean eliminarEquipo(Usuario usuario) {
             }
         }
     }
+}
+
+public boolean registrarPartida(Usuario usuario, String resultado) {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+
+    try {
+        conn = conectar(); 
+
+        // Verifica que el jugador exista en la tabla de usuarios
+        if (!existeUsuario(conn, usuario.getNombre())) {
+            JOptionPane.showMessageDialog(null, "El usuario no existe.");
+            return false;
+        }
+
+        // Crea una sentencia SQL para insertar los detalles de la partida en la tabla Partidas
+        String sql = "INSERT INTO batalla (usuario_id, resultado) VALUES (?, ?)";
+        stmt = conn.prepareStatement(sql);
+
+        stmt.setInt(1, usuario.getJugador_id());
+        stmt.setString(2, resultado);
+
+        // Ejecuta la sentencia SQL
+        int filasAfectadas = stmt.executeUpdate();
+
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(null, "Partida registrada exitosamente.");
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Error al registrar la partida.");
+            return false;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al registrar la partida.");
+        return false;
+    } finally {
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+private boolean existeUsuario(Connection conn, String nombreUsuario) {
+    try {
+        String sql = "SELECT jugador_id FROM usuario WHERE nombre = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, nombreUsuario);
+        ResultSet rs = stmt.executeQuery();
+        boolean existe = rs.next();
+        rs.close();
+        stmt.close();
+        return existe;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+public boolean actualizarResultadoPartida(Usuario usuario, String resultado) {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+
+    try {
+        conn = conectar(); // Obtén una conexión a la base de datos
+
+        if (!existeUsuario(conn, usuario.getNombre())) {
+            JOptionPane.showMessageDialog(null, "El usuario no existe.");
+            return false;
+        }
+
+        // Crea una sentencia SQL para actualizar el resultado de la partida en la tabla Partidas
+        String sql = "UPDATE batalla SET resultado = ? WHERE jugador_id = ?";
+        stmt = conn.prepareStatement(sql);
+
+        // Establece los valores de los parámetros en la sentencia SQL
+        stmt.setString(1, resultado);
+        stmt.setInt(2, usuario.getJugador_id());
+
+        int filasAfectadas = stmt.executeUpdate();
+
+        if (filasAfectadas > 0) {
+            JOptionPane.showMessageDialog(null, "Resultado de la partida actualizado exitosamente.");
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Error al actualizar el resultado de la partida.");
+            return false;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error al actualizar el resultado de la partida.");
+        return false;
+    } finally {
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+public List<String> cargarPersonajesDesdeBD(Usuario usuario) {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    List<String> nombresPersonajes = new ArrayList<>();
+
+    try {
+        conn = conectar();
+
+        String sql = "SELECT personaje_nombre FROM equipo WHERE jugador_id = ?";
+        stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, usuario.getJugador_id());
+
+        rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String nombrePersonaje = rs.getString("personaje_nombre");
+            nombresPersonajes.add(nombrePersonaje);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    return nombresPersonajes;
+}
+
+public List<String> obtenerNombresPersonajesDisponibles() {
+    List<String> nombresPersonajes = new ArrayList<>();
+
+    try {
+        con = conectar(); // Establecer la conexión a la base de datos
+
+        // Verificar que la conexión esté abierta antes de realizar la consulta
+        if (con != null && !con.isClosed()) {
+            // Consulta para obtener los nombres de los personajes disponibles
+            String sql = "SELECT nombre FROM personaje";
+            try (PreparedStatement stmt = con.prepareStatement(sql);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    nombresPersonajes.add(rs.getString("nombre"));
+                }
+            }
+        } else {
+            // Puedes agregar un mensaje de error o realizar alguna acción en caso de que la conexión no esté abierta
+            System.err.println("Error: La conexión no está abierta.");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+}
+
+    return nombresPersonajes;
+}
+
+public Estadistica obtenerEstadisticasPorNombre(String nombrePersonaje) {
+    Estadistica estadistica = null;
+    String query = "SELECT hp, def, er, em FROM estadistica JOIN personaje ON estadistica.id_Estadistica = personaje.Estadistica_id_Estadistica WHERE nombre = ?";
+
+    try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        preparedStatement.setString(1, nombrePersonaje);
+
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            if (resultSet.next()) {
+                int hp = resultSet.getInt("hp");
+                int def = resultSet.getInt("def");
+                int er = resultSet.getInt("er");
+                int em = resultSet.getInt("em");
+
+                estadistica = new Estadistica(hp, def, er, em);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return estadistica;
+}
+
+public List<Habilidad> obtenerHabilidadesPorNombre(String nombrePersonaje) {
+    List<Habilidad> habilidades = new ArrayList<>();
+
+    try {
+        // Declarar la consulta SQL
+    	String query = "SELECT nombre, descripcion, efecto, personaje_nombre " +
+                "FROM habilidades " +
+                "WHERE personaje_nombre = ?";
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
+            // Establecer el parámetro en la consulta
+            stmt.setString(1, nombrePersonaje);
+
+            // Ejecutar la consulta y obtener el conjunto de resultados
+            try (ResultSet rs = stmt.executeQuery()) {
+                // Procesar los resultados y construir la lista de habilidades
+                while (rs.next()) {
+                    String nombreHabilidad = rs.getString("nombre");
+                    String descripcion = rs.getString("descripcion");
+                    int efecto = rs.getInt("efecto");
+                    String personaje_nombre = rs.getString("personaje_nombre");
+
+                    Habilidad habilidad = new Habilidad(nombreHabilidad, descripcion, efecto, personaje_nombre);
+                    habilidades.add(habilidad);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return habilidades;
+}
+
+private void cerrarConexion() {
+    try {
+        if (con != null) {
+            con.close();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public Connection obtenerConexion() {
+    return con;
 }
 
 }
