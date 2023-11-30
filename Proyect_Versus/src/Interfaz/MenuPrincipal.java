@@ -1,13 +1,14 @@
 package Interfaz;
 
 import Logica.Usuario;
+
 import Logica.Partida;
 import BD.Conexion;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-
+import Interfaz.EquipoyBatalla;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,9 +17,8 @@ import java.awt.event.ActionListener;
 public class MenuPrincipal extends JFrame {
 
     private JPanel contentPane;
-    private Conexion con; // Agrega una variable de conexión como campo de clase
+    private Conexion con; 
     
-
     public void run(Usuario usuario) {
         try {
             MenuPrincipal frame = new MenuPrincipal(usuario);
@@ -40,8 +40,6 @@ public class MenuPrincipal extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        
-        
         JLabel textomenu = new JLabel("¿Qué desea realizar?");
         textomenu.setFont(new Font("Tahoma", Font.PLAIN, 24));
         textomenu.setBounds(141, -20, 226, 123);
@@ -64,21 +62,29 @@ public class MenuPrincipal extends JFrame {
 
         botondecrearpartida.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Conexion conexion = new Conexion();
-                Partida nuevaPartida = new Partida(usuario, conexion);
-                nuevaPartida.jugar();
+<<<<<<< HEAD
+                // Abre la ventana EquipoyBatalla al hacer clic en "Crear Partida"
+                EquipoyBatalla equipoyBatalla = new EquipoyBatalla(usuario);
+                equipoyBatalla.setVisible(true);
+=======
+            	 EquipoyBatalla pantalla = new EquipoyBatalla(usuario);
+                 pantalla.run(usuario);
+                 dispose();
+>>>>>>> e8c5045767979f586ae777f8dc93cb1f11f8a3ef
             }
         });
         
         con = new Conexion();
 
         JButton botonDetalles = new JButton("Detalles de Personajes");
-        botonDetalles.setBounds(10, 150, 150, 30);
         botonDetalles.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 mostrarDetallesPersonajes(con);
             }
         });
+        
+        botonDetalles.setBounds(10, 150, 121, 58);
+        botonDetalles.setFont(new Font("Tahoma", Font.PLAIN,12));
         contentPane.add(botonDetalles);
 
         JButton botondesalir = new JButton("Salir");

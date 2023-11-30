@@ -1,8 +1,6 @@
 package Logica;
 
 import java.sql.*;
-
-
 import BD.Conexion;
 
 public class SistemaJuego implements InicioDeSesion {
@@ -11,7 +9,6 @@ public class SistemaJuego implements InicioDeSesion {
     private PreparedStatement stmt;
 
     public SistemaJuego() {
-        // Inicializa la conexión a la base de datos
         Conexion con = new Conexion();
         conexion = con.conectar();
     }

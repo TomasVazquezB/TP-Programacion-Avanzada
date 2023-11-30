@@ -1,7 +1,6 @@
 package Logica;
 
 import java.sql.*;
-
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.*;
@@ -62,7 +61,7 @@ public class Validador {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error al editar usuario: " + e.getMessage());
             }
-            return false; // Error al editar
+            return false; 
         }
     }
 
@@ -80,7 +79,7 @@ public class Validador {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error al eliminar usuario: " + e.getMessage());
             }
-            return false; // Error al eliminar
+            return false; 
         }
     }
 
@@ -113,8 +112,7 @@ public class Validador {
             stmt.setInt(1, idUsuario);
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                // Recupera información de cada partida y agrégala al historial
-                // Agrega partidas a la lista historial
+               
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al obtener el historial de usuario: " + e.getMessage());
@@ -124,35 +122,30 @@ public class Validador {
     
     public boolean registrarUsuario(Usuario usuario) {
         try {
-            // Verificar si el nombre de usuario ya existe en la base de datos
             String selectUsuarioSQL = "SELECT COUNT(*) FROM usuario WHERE nombre = ?";
             stmt = conexion.prepareStatement(selectUsuarioSQL);
             stmt.setString(1, usuario.getNombre());
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next() && rs.getInt(1) > 0) {
-                // El nombre de usuario ya existe, por lo que no se puede registrar.
                 return false;
             }
 
-            // Obtener el ID máximo actual en la tabla 'jugador'
             String selectMaxJugadorIdSQL = "SELECT MAX(id) FROM jugador";
             stmt = conexion.prepareStatement(selectMaxJugadorIdSQL);
             rs = stmt.executeQuery();
-            int jugadorId = 1; // Valor predeterminado si no hay jugadores existentes.
+            int jugadorId = 1; 
 
             if (rs.next()) {
                 jugadorId = rs.getInt(1) + 1;
             }
 
-            // Insertar el nuevo jugador
             String insertJugadorSQL = "INSERT INTO jugador (id, nivel) VALUES (?, ?)";
             stmt = conexion.prepareStatement(insertJugadorSQL);
             stmt.setInt(1, jugadorId);
             stmt.setInt(2, usuario.getNivelCuenta());
             stmt.executeUpdate();
 
-            // Insertar el usuario con el jugador_id obtenido
             String insertUsuarioSQL = "INSERT INTO usuario (nombre, contrasena, jugador_id, nivelCuenta, nivelClasificatorias) VALUES (?, ?, ?, ?, ?)";
             stmt = conexion.prepareStatement(insertUsuarioSQL);
             stmt.setString(1, usuario.getNombre());
@@ -162,10 +155,10 @@ public class Validador {
             stmt.setInt(5, usuario.getNivelClasificatorias());
 
             stmt.executeUpdate();
-            return true; // Registro exitoso
+            return true; 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al registrar usuario: " + e.getMessage());
-            return false; // Error en el registro
+            return false; 
         }
     }
 }

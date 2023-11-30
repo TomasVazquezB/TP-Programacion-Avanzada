@@ -1,7 +1,5 @@
 package Logica;
 
-import java.util.List;
-
 import javax.swing.*;
 
 public class Habilidad {
@@ -26,6 +24,12 @@ public class Habilidad {
         this.personaje_nombre = personaje_nombre;
     }
 
+	@Override
+	public String toString() {
+		return "Habilidad [nombre=" + nombre + ", descripcion=" + descripcion + ", efecto=" + efecto
+				+ ", personaje_nombre=" + personaje_nombre + "]";
+	}
+	
     public int getEfecto() {
 		return efecto;
 	}
@@ -36,16 +40,9 @@ public class Habilidad {
 
 	public Habilidad(String nombre) {
         this.nombre = nombre;
-        // Puedes inicializar la descripción y el efecto según tus necesidades
         this.descripcion = "Descripción por defecto";
         this.efecto = 0;
     }
-
-	@Override
-	public String toString() {
-		return "Habilidad [nombre=" + nombre + ", descripcion=" + descripcion + ", efecto=" + efecto
-				+ ", personaje_nombre=" + personaje_nombre + "]";
-	}
 
 	public String getDescripcion() {
 		return descripcion;
@@ -73,8 +70,7 @@ public class Habilidad {
 
 	public void usarHabilidad(Personaje objetivo) {
 	    JOptionPane.showMessageDialog(null, "Usando " + nombre + " contra " + objetivo.getNombre() + ". Efecto: " + efecto, "Personaje en uso", JOptionPane.DEFAULT_OPTION);
-
-	    // Lógica adicional, por ejemplo, reducir la vida del personaje objetivo
+ 
 	    objetivo.reducirVida(efecto);
 	}
 }
