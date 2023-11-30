@@ -10,7 +10,6 @@ import BD.Conexion;
 
 public class VentanaDetallesPersonajes extends JFrame {
 
-	private JPanel contentPane;
     private Conexion conexion; 
 
     public VentanaDetallesPersonajes(Conexion conexion) {
@@ -67,10 +66,10 @@ public class VentanaDetallesPersonajes extends JFrame {
                 JOptionPane.showMessageDialog(null, "Error al cargar detalles de personajes", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    
+         
         JScrollPane scrollPane = new JScrollPane(panelDetalles);
 
         add(scrollPane);
-        
+               
        } 
     } 

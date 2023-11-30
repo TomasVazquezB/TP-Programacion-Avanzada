@@ -197,7 +197,7 @@ public class Usuario implements InicioDeSesion {
             Personaje seleccionado = mostrarPersonajesYObtenerSeleccion(personajesDisponibles);
             if (seleccionado == null) {
                 JOptionPane.showMessageDialog(null, "Selección de personajes cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
-                return;
+                return; 
             }
 
             equipo.add(seleccionado);
@@ -211,6 +211,7 @@ public class Usuario implements InicioDeSesion {
             JOptionPane.showMessageDialog(null, "Error al guardar el equipo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     
     public List<Personaje> obtenerPersonajesDisponibles() {
         List<Personaje> personajesDisponibles = new ArrayList<>();
