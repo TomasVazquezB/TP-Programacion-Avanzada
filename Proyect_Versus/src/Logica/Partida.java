@@ -110,12 +110,10 @@ public class Partida {
         }
         
         if (!mensaje.isEmpty()) {
-            registrarPartida(jugador, resultado);
             JOptionPane.showMessageDialog(null, mensaje);
         }
     }
-
-
+    
     private String obtenerResultadoAleatorio() {
         String[] resultados = {"Derrota", "Victoria", "Empate"};
         int indiceAleatorio = new Random().nextInt(resultados.length);
@@ -139,19 +137,7 @@ public class Partida {
         }
         return false;
     }
-
-    private void registrarPartida(Usuario usuario, String resultado) {
-        try {
-            boolean exito = con.actualizarResultadoPartida(usuario, resultado);
-            if (exito) {
-            	//JOptionPane.showMessageDialog(null, "Resultado de la partida guardado en la base de datos.");
-            } else {
-            	JOptionPane.showMessageDialog(null, "Error al guardar el resultado de la partida en la base de datos.");
-            }
-        } catch (Exception e) {
-        	JOptionPane.showMessageDialog(null, "Error al registrar la partida en la base de datos: " + e.getMessage());
-    }
-    }
+    
     private List<Personaje> cargarPersonajesDesdeBD(Usuario usuario) {
         Conexion conexion = new Conexion();
         List<String> nombresPersonajes = conexion.cargarPersonajesDesdeBD(usuario);

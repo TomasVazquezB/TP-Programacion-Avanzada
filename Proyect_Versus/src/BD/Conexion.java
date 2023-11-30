@@ -434,16 +434,6 @@ public List<Habilidad> obtenerHabilidadesPorNombre(String nombrePersonaje) {
     return habilidades;
 }
 
-private void cerrarConexion() {
-    try {
-        if (con != null) {
-            con.close();
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
 public Connection obtenerConexion() {
     return con;
 }

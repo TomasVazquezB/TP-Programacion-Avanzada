@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import BD.Conexion;
 
-public class Usuario implements InicioDeSesion {
+public class Usuario{
 	
     private String nombre;
     private String contrasena;
@@ -187,10 +187,7 @@ public class Usuario implements InicioDeSesion {
         }
     }
     
-    
     public void armarEquipo(Usuario usuario) {
-        con.eliminarEquipo(usuario);
-
         List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
         List<Personaje> equipo = new ArrayList<>();
 
@@ -205,15 +202,17 @@ public class Usuario implements InicioDeSesion {
             personajesDisponibles.remove(seleccionado);
         }
 
-        boolean exito = con.guardarEquipoEnBaseDeDatos(usuario, equipo);
-        if (exito) {
-            JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Cancelado.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (!equipo.isEmpty()) {
+            con.eliminarEquipo(usuario);
+            boolean exito = con.guardarEquipoEnBaseDeDatos(usuario, equipo);
+            if (exito) {
+                JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al guardar el equipo.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
-    
     public List<Personaje> obtenerPersonajesDisponibles() {
         List<Personaje> personajesDisponibles = new ArrayList<>();
 
@@ -245,12 +244,11 @@ public class Usuario implements InicioDeSesion {
         String[] nombresYTipos = personajesDisponibles.stream()
                 .map(personaje -> personaje.getNombre() + " - " + personaje.getTipo())
                 .toArray(String[]::new);
-
         JComboBox<String> comboBox = new JComboBox<>(nombresYTipos);
 
         int seleccion = JOptionPane.showOptionDialog(null, comboBox,
                 "Selecciona un personaje para tu equipo:", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE, null, null, null);
+                JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Aceptar"}, null);
 
         if (seleccion == JOptionPane.OK_OPTION) {
             String selectedItem = (String) comboBox.getSelectedItem();
@@ -269,7 +267,7 @@ public class Usuario implements InicioDeSesion {
         }
 
         return new Personaje("Cancelado", ""); 
-    }
+        }
 
     public List<Personaje> getEquipo() {
 		return equipo;
@@ -295,13 +293,4 @@ public class Usuario implements InicioDeSesion {
 	        }
 	        return true;
 	    }
-	@Override
-    public void menu() {
-        // Implementa el menú de Usuario
-    }
-
-    @Override
-    public void cerrarSesion() {
-        // Implementa la lógica para cerrar la sesión
-    }	
 }
