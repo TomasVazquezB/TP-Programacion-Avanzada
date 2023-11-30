@@ -5,7 +5,9 @@ import java.util.List;
 
 public class PersonajeComboBoxModel extends DefaultComboBoxModel<Object> {
 
-    public PersonajeComboBoxModel(List<Personaje> personajes) {
+    private static final long serialVersionUID = -3986223225467606847L;
+
+	public PersonajeComboBoxModel(List<Personaje> personajes) {
         super(personajes.toArray());
     }
 
