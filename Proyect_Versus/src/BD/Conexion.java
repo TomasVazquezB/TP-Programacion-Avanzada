@@ -20,7 +20,7 @@ Connection con ;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
-	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd juego por turnos", "root", "");
+	        con = DriverManager.getConnection("jdbc:mysql://localhost:3463/bd juego por turnos", "root", "");
 	        
 	    } catch (ClassNotFoundException e) {
 	        e.printStackTrace();
@@ -385,19 +385,20 @@ public List<String> obtenerNombresPersonajesDisponibles() {
 
 public Estadistica obtenerEstadisticasPorNombre(String nombrePersonaje) {
     Estadistica estadistica = null;
-    String query = "SELECT hp, def, er, em FROM estadistica JOIN personaje ON estadistica.id_Estadistica = personaje.Estadistica_id_Estadistica WHERE nombre = ?";
+    String query = "SELECT atk, hp, def, er, em FROM estadistica JOIN personaje ON estadistica.id_Estadistica = personaje.Estadistica_id_Estadistica WHERE nombre = ?";
 
     try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
         preparedStatement.setString(1, nombrePersonaje);
 
         try (ResultSet resultSet = preparedStatement.executeQuery()) {
             if (resultSet.next()) {
+            	int atk = resultSet.getInt("atk");
                 int hp = resultSet.getInt("hp");
                 int def = resultSet.getInt("def");
                 int er = resultSet.getInt("er");
                 int em = resultSet.getInt("em");
 
-                estadistica = new Estadistica(hp, def, er, em);
+                estadistica = new Estadistica(atk,hp, def, er, em);
             }
         }
     } catch (SQLException e) {

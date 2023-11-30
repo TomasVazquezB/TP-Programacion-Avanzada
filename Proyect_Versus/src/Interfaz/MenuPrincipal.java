@@ -1,13 +1,14 @@
 package Interfaz;
 
 import Logica.Usuario;
+
 import Logica.Partida;
 import BD.Conexion;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-
+import Interfaz.EquipoyBatalla;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,9 +62,15 @@ public class MenuPrincipal extends JFrame {
 
         botondecrearpartida.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
+                // Abre la ventana EquipoyBatalla al hacer clic en "Crear Partida"
+                EquipoyBatalla equipoyBatalla = new EquipoyBatalla(usuario);
+                equipoyBatalla.setVisible(true);
+=======
             	 EquipoyBatalla pantalla = new EquipoyBatalla(usuario);
                  pantalla.run(usuario);
                  dispose();
+>>>>>>> e8c5045767979f586ae777f8dc93cb1f11f8a3ef
             }
         });
         

@@ -206,9 +206,9 @@ public class Usuario implements InicioDeSesion {
 
         boolean exito = con.guardarEquipoEnBaseDeDatos(usuario, equipo);
         if (exito) {
-            JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente en la base de datos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "Error al guardar el equipo en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Cancelado.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
