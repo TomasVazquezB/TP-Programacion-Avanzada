@@ -4,11 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import BD.Conexion;
-import Logica.Usuario;
-import Logica.Validador;
-
+import BD.*;
+import Logica.*;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -40,8 +37,6 @@ public class PantallaDeInicio extends JFrame {
 					e.printStackTrace();
 				}
 			}
-	
-
 	/**
 	 * Create the frame.
 	 */
@@ -72,8 +67,7 @@ public class PantallaDeInicio extends JFrame {
 		Ingresar.setBounds(638, 394, 121, 58);
 		Ingresar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Ingresar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e) {		
 				 Conexion conexion = new Conexion();
 			        Connection connection = conexion.conectar();
 			        Validador sistema = new Validador(connection);
@@ -121,9 +115,8 @@ public class PantallaDeInicio extends JFrame {
 		JButton Registrarse = new JButton("Registro");
 		Registrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 		        Validador sistema = new Validador(connection);
-		      
+		
 		         if (registronombre == null || registronombre.getText().isEmpty()) {
 		            JOptionPane.showMessageDialog(null, "El nombre de usuario no puede estar vacío. Intente nuevamente.","Error", JOptionPane.ERROR_MESSAGE);
 		            return;

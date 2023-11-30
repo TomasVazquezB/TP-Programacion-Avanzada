@@ -2,12 +2,7 @@ package BD;
 
 import javax.swing.*;
 import java.util.ArrayList;
-
-import Logica.Estadistica;
-import Logica.Habilidad;
-import Logica.Personaje;
-import Logica.Usuario;
-
+import Logica.*;
 import java.sql.*;
 import java.util.List;
 
@@ -20,7 +15,7 @@ Connection con ;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
-	        con = DriverManager.getConnection("jdbc:mysql://localhost:3463/bd juego por turnos", "root", "");
+	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd juego por turnos", "root", "");
 	        
 	    } catch (ClassNotFoundException e) {
 	        e.printStackTrace();
@@ -291,7 +286,6 @@ public boolean actualizarResultadoPartida(Usuario usuario, String resultado) {
 
         String sql = "UPDATE batalla SET resultado = ? WHERE jugador_id = ?";
         stmt = conn.prepareStatement(sql);
-
         stmt.setString(1, resultado);
         stmt.setInt(2, usuario.getJugador_id());
 

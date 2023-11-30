@@ -10,7 +10,8 @@ import BD.Conexion;
 
 public class VentanaDetallesPersonajes extends JFrame {
 
-    private Conexion conexion; 
+    private static final long serialVersionUID = -8273246063043012571L;
+	private Conexion conexion; 
 
     public VentanaDetallesPersonajes(Conexion conexion) {
         this.conexion = conexion;

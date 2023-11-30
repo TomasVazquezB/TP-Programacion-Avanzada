@@ -1,6 +1,6 @@
 package Interfaz;
 
-import BD.Conexion;
+import BD.*;
 import java.sql.*;
 import Logica.*;
 

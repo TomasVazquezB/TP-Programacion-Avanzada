@@ -21,6 +21,7 @@ public class Usuario implements InicioDeSesion {
     private Connection conexion = con.conectar();
     private PreparedStatement stmt;
 	private List<Personaje> equipo;
+	
     
     public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
@@ -287,6 +288,13 @@ public class Usuario implements InicioDeSesion {
         this.equipo = equipo;
     }
 
+	   public boolean puedeJugar() {
+	        if (this.equipo.isEmpty()) {
+	        	JOptionPane.showMessageDialog(null,"Debes seleccionar o crear un equipo antes de jugar una partida.");
+	            return false;
+	        }
+	        return true;
+	    }
 	@Override
     public void menu() {
         // Implementa el menú de Usuario

@@ -9,12 +9,74 @@ public class Validador {
 
     private Connection conexion;
     private PreparedStatement stmt;
+	private String nombre;
+	private String contrasena;
+	private int jugador_id;
+	private int nivelCuenta;
+	private int nivelClasificatorias;
+	private List<Partida> historial;
 
     public Validador(Connection conexion) {
         this.conexion = conexion;
     }
 
-    public Usuario ValidarIngreso(String nombre, String contrasena) {
+    @Override
+	public String toString() {
+		return "Validador [nombre=" + nombre + ", contrasena=" + contrasena + ", jugador_id=" + jugador_id
+				+ ", nivelCuenta=" + nivelCuenta + ", nivelClasificatorias=" + nivelClasificatorias + ", historial="
+				+ historial + "]";
+	}
+
+    public String getNombre() {
+    	return nombre;
+    }
+    
+    public void setNombre(String nombre) {
+    	this.nombre = nombre;
+    }
+    
+    public String getContrasena() {
+    	return contrasena;
+    }
+    
+    public void setContrasena(String contrasena) {
+    	this.contrasena = contrasena;
+    }
+    
+    public int getNivelCuenta() {
+    	return nivelCuenta;
+    }
+    
+    public void setNivelCuenta(int nivelCuenta) {
+    	this.nivelCuenta = nivelCuenta;
+    }
+    
+    public int getJugador_id() {
+    	return jugador_id;
+    }
+    
+    public void setJugador_id(int jugador_id) {
+    	this.jugador_id = jugador_id;
+    }
+    
+    public List<Partida> getHistorial() {
+    	return historial;
+    }
+    
+    public void setHistorial(List<Partida> historial) {
+    	this.historial = historial;
+    }
+    
+    public int getNivelClasificatorias() {
+    	return nivelClasificatorias;
+    }
+    
+    public void setNivelClasificatorias(int nivelClasificatorias) {
+    	this.nivelClasificatorias = nivelClasificatorias;
+    }
+
+
+	public Usuario ValidarIngreso(String nombre, String contrasena) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos");
             return null;
@@ -90,13 +152,12 @@ public class Validador {
             stmt = conexion.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                String nombre = resultado.getString("nombre");
-                String contrasena = resultado.getString("contrasena");
-                int jugador_id = resultado.getInt("jugador_id");
-                int nivelCuenta = resultado.getInt("nivelCuenta");
-                int nivelClasificatorias = resultado.getInt("nivelClasificatorias");
-                List<Partida> historial = obtenerHistorialPorUsuario(resultado.getInt("id"));
-                // agregar el constructor en la clase Usuario usuarios.add(new Usuario(nombre, contrasena, nivelCuenta, nivelClasificatorias, historial));
+                setNombre(resultado.getString("nombre"));
+                setContrasena(resultado.getString("contrasena"));
+                setJugador_id(resultado.getInt("jugador_id"));
+                setNivelCuenta(resultado.getInt("nivelCuenta"));
+                setNivelClasificatorias(resultado.getInt("nivelClasificatorias"));
+                setHistorial(obtenerHistorialPorUsuario(resultado.getInt("id")));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al mostrar usuarios: " + e.getMessage());
@@ -153,7 +214,6 @@ public class Validador {
             stmt.setInt(3, jugadorId);
             stmt.setInt(4, usuario.getNivelCuenta());
             stmt.setInt(5, usuario.getNivelClasificatorias());
-
             stmt.executeUpdate();
             return true; 
         } catch (Exception e) {

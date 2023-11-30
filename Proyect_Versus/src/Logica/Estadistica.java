@@ -7,8 +7,6 @@ public class Estadistica {
     private int er;
     private int em;
 
-    
-    
     public Estadistica(int atk, int hp, int def, int er, int em) {
 		super();
 		this.atk = atk;
@@ -22,8 +20,7 @@ public class Estadistica {
 	public String toString() {
 		return "Estadistica [atk=" + atk + ", hp=" + hp + ", def=" + def + ", er=" + er + ", em=" + em + "]";
 	}
-    
-	
+    	
 	public int getAtk() {
 		return atk;
 	}
