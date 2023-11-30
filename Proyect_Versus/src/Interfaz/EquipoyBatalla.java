@@ -7,9 +7,17 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import BD.Conexion;
+import Logica.Partida;
+import Logica.Usuario;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -21,23 +29,19 @@ public class EquipoyBatalla extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+			public void run(Usuario usuario) {
 				try {
-					EquipoyBatalla frame = new EquipoyBatalla();
+					EquipoyBatalla frame = new EquipoyBatalla(usuario);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public EquipoyBatalla() {
+	public EquipoyBatalla(Usuario usuario) {
 		setTitle("Project Versus");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\icono.jpg"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,6 +60,15 @@ public class EquipoyBatalla extends JFrame {
 		botonbatalla.setBounds(28, 230, 121, 58);
 		contentPane.add(botonbatalla);
 		
+		botonbatalla.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            Conexion conexion = new Conexion();
+	            Partida nuevaPartida = new Partida(usuario, conexion);
+	            nuevaPartida.jugar();
+	            }
+	        });
+	        
+	       
 		JLabel menu = new JLabel("");
 		menu.setBounds(-362, -228, 1393, 875);
 		menu.setIcon(new ImageIcon("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\menu de inicio.jpg"));

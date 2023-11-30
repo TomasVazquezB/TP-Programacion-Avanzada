@@ -298,7 +298,7 @@ public boolean actualizarResultadoPartida(Usuario usuario, String resultado) {
         int filasAfectadas = stmt.executeUpdate();
 
         if (filasAfectadas > 0) {
-            JOptionPane.showMessageDialog(null, "Resultado de la partida actualizado exitosamente.","Resultado",JOptionPane.DEFAULT_OPTION);
+            //JOptionPane.showMessageDialog(null, "Resultado de la partida actualizado exitosamente.","Resultado",JOptionPane.DEFAULT_OPTION);
             return true;
         } else {
             JOptionPane.showMessageDialog(null, "Error al actualizar el resultado de la partida.","Error",JOptionPane.ERROR_MESSAGE);

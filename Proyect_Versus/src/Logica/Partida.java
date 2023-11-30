@@ -64,13 +64,16 @@ public class Partida {
         return false;
     }
 
+    
+    
+    
     private void registrarPartida(Usuario usuario, String resultado) {
         boolean exito = con.actualizarResultadoPartida(usuario, resultado);
 
-        if (exito) {
-            System.out.println("Resultado de la partida guardado en la base de datos.");
+        if (exito) {	  	
+         JOptionPane.showMessageDialog(null,"Resultado de la partida guardado en la base de datos.","Resultado Guardado",JOptionPane.DEFAULT_OPTION);
         } else {
-            System.out.println("Error al guardar el resultado de la partida en la base de datos.");
+        	JOptionPane.showMessageDialog(null,"Error al guardar el resultado de la partida en la base de datos.");
         }
     }
 

@@ -61,9 +61,9 @@ public class MenuPrincipal extends JFrame {
 
         botondecrearpartida.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Conexion conexion = new Conexion();
-                Partida nuevaPartida = new Partida(usuario, conexion);
-                nuevaPartida.jugar();
+            	 EquipoyBatalla pantalla = new EquipoyBatalla(usuario);
+                 pantalla.run(usuario);
+                 dispose();
             }
         });
         
