@@ -54,6 +54,13 @@ public class Personaje {
         this.habilidades = habilidades;
     }
 
+    public int getVida() {
+    	return vida;
+    }
+    
+    public void setVida(int vida) {
+    	this.vida = vida;
+    }
     public void agregarHabilidad(Habilidad habilidad) {
         habilidades.add(habilidad);
     }
@@ -63,14 +70,6 @@ public class Personaje {
         for (Habilidad habilidad : habilidades) {
             JOptionPane.showMessageDialog(null, "-" + habilidad.getNombre(), "Habilidad del personaje", JOptionPane.DEFAULT_OPTION);
         }
-    }
-
-    public int getVida() {
-        return vida;
-    }
-
-    public void setVida(int vida) {
-        this.vida = vida;
     }
 
     public void reducirVida(int cantidad) {

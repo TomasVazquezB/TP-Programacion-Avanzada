@@ -110,7 +110,6 @@ public class PantallaDeInicio extends JFrame {
 		Salir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
 		 JOptionPane.showMessageDialog(null, "Gracias por jugar. ¡Hasta Luego!", "Hasta Luego",JOptionPane.QUESTION_MESSAGE);
 				System.exit(0);
 			}

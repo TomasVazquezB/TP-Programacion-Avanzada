@@ -1,8 +1,6 @@
 package Logica;
 
 import java.sql.*;
-
-
 import BD.Conexion;
 
 public class SistemaJuego implements InicioDeSesion {

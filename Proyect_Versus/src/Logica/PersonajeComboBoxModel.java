@@ -1,7 +1,6 @@
 package Logica;
 
 import javax.swing.*;
-
 import java.util.List;
 
 public class PersonajeComboBoxModel extends DefaultComboBoxModel<Object> {
