@@ -62,7 +62,6 @@ public class Estadistica {
 		}
 		
 		public void reducirVida(int cantidad) {
-	        // Verificar que la cantidad no sea mayor que la vida actual
 	        if (cantidad > hp) {
 	            hp = 0;
 	        } else {

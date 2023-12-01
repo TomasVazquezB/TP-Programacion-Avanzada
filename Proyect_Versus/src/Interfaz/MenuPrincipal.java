@@ -2,8 +2,6 @@ package Interfaz;
 
 import Logica.*;
 import BD.*;
-import BD.Conexion;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -24,7 +22,6 @@ public class MenuPrincipal extends JFrame {
             e.printStackTrace();
         }
     }
-    
     
     public MenuPrincipal(Usuario usuario) {
     	
@@ -53,20 +50,16 @@ public class MenuPrincipal extends JFrame {
         });
         contentPane.add(botondearmarequipo);
 
-        JButton botondecrearpartida = new JButton("Crear Partida");
-        botondecrearpartida.setBounds(190, 217, 121, 58);
-        botondecrearpartida.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        contentPane.add(botondecrearpartida);
+        JButton botonbatalla = new JButton("Batalla");
+        botonbatalla.setBounds(190, 217, 121, 58);
+        botonbatalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        contentPane.add(botonbatalla);
 
-        botondecrearpartida.addActionListener(new ActionListener() {
+        botonbatalla.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                EquipoyBatalla equipoyBatalla = new EquipoyBatalla(usuario);
-                equipoyBatalla.setVisible(true);
-
-            	 EquipoyBatalla pantalla = new EquipoyBatalla(usuario);
-                 pantalla.run(usuario);
-                 dispose();
+            	Conexion conexion = new Conexion(); 
+        		Partida nuevaPartida = new Partida(usuario, conexion);
+        		nuevaPartida.jugar();
 
             }
         });

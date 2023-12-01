@@ -15,7 +15,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
-import BD.Conexion;
 
 public class PantallaDeInicio extends JFrame {
 

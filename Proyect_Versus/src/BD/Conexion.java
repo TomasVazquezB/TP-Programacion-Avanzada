@@ -15,7 +15,7 @@ Connection con ;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
-	        con = DriverManager.getConnection("jdbc:mysql://localhost:3463/bd juego por turnos", "root", "");
+	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd juego por turnos", "root", "");
 	        
 	    } catch (ClassNotFoundException e) {
 	        e.printStackTrace();

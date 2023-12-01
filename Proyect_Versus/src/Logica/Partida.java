@@ -18,7 +18,7 @@ public class Partida {
 
     public Partida(Usuario jugador, Conexion con) {
         this.jugador = jugador;
-        this.con = con;
+        this.setCon(con);
         this.jugadorPersonaje = cargarPersonajesDesdeBD(jugador);
         this.maquina = new Usuario("Maquina"); 
         this.maquinaPersonaje = cargarPersonajesDesdeBD(jugador);
@@ -32,8 +32,15 @@ public class Partida {
         }
     }
 
+    public Conexion getCon() {
+    	return con;
+    }
+    
+    public void setCon(Conexion con) {
+    	this.con = con;
+    }
+    
     public void jugar() {
-        // Asigna un equipo aleatorio a la máquina antes de jugar
         List<Personaje> equipoAleatorio = cargarPersonajesDesdeBD(maquina);
         maquina.setEquipo(equipoAleatorio);
 
@@ -152,6 +159,4 @@ public class Partida {
         int maxCantidad = Math.min(4, personajesDisponibles.size());
         return (int) (Math.random() * maxCantidad) + 1;
     }
-      
-    
 }

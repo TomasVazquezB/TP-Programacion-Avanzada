@@ -293,7 +293,7 @@ public class Usuario{
 	        JOptionPane.showMessageDialog(null,"Debes seleccionar o crear un equipo antes de jugar una partida.");
 	        return false;
 	    }
-	    this.setEquipo(equipoDB); // Asegúrate de que el jugador tenga un equipo antes de jugar
+	    this.setEquipo(equipoDB);
 	    return true;
 	}
 
