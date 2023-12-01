@@ -1,2 +1,0 @@
-INDEX VERSION 1.134+C:\Users\EXCOFIER\Documents\GitHub\TP-Programacion-Avanzada\Proyect_Versus\.metadata\.plugins\org.eclipse.jdt.core
-1206333860.index
