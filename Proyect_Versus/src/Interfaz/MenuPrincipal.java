@@ -2,6 +2,8 @@ package Interfaz;
 
 import Logica.*;
 import BD.*;
+import BD.Conexion;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -22,7 +24,8 @@ public class MenuPrincipal extends JFrame {
             e.printStackTrace();
         }
     }
-
+    
+    
     public MenuPrincipal(Usuario usuario) {
     	
         setTitle("Project Versus");

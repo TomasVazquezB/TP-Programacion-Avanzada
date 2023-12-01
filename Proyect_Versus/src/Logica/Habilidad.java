@@ -70,7 +70,13 @@ public class Habilidad {
 
 	public void usarHabilidad(Personaje objetivo) {
 	    JOptionPane.showMessageDialog(null, "Usando " + nombre + " contra " + objetivo.getNombre() + ". Efecto: " + efecto, "Personaje en uso", JOptionPane.DEFAULT_OPTION);
- 
-	    objetivo.reducirVida(efecto);
+
+	    Estadistica estadisticasObjetivo = objetivo.getEstadisticas();
+	    if (estadisticasObjetivo != null) {
+	        estadisticasObjetivo.reducirVida(efecto);
+	        JOptionPane.showMessageDialog(null, "Se ha aplicado " + efecto + " de daño a " + objetivo.getNombre() + ".", "Ataque exitoso", JOptionPane.DEFAULT_OPTION);
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No se pudo aplicar la habilidad a " + objetivo.getNombre() + ". Estadísticas no disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 }

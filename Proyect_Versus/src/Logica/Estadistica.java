@@ -60,4 +60,15 @@ public class Estadistica {
 		public void setEm(int em) {
 			this.em = em;
 		}
+		
+		public void reducirVida(int cantidad) {
+	        // Verificar que la cantidad no sea mayor que la vida actual
+	        if (cantidad > hp) {
+	            hp = 0;
+	        } else {
+	            hp -= cantidad;
+	        }
+	
+		
+}
 }

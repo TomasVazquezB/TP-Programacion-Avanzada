@@ -15,7 +15,7 @@ Connection con ;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
-	        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bd juego por turnos", "root", "");
+	        con = DriverManager.getConnection("jdbc:mysql://localhost:3463/bd juego por turnos", "root", "");
 	        
 	    } catch (ClassNotFoundException e) {
 	        e.printStackTrace();
@@ -437,5 +437,38 @@ public List<Habilidad> obtenerHabilidadesPorNombre(String nombrePersonaje) {
 public Connection obtenerConexion() {
     return con;
 }
+
+public List<Personaje> obtenerEquipoDeBaseDeDatos(Usuario usuario) {
+    List<Personaje> equipo = new ArrayList<>();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        con = conectar();
+        ps = con.prepareStatement("SELECT personaje_nombre FROM equipo WHERE jugador_id = ?");
+        ps.setInt(1, usuario.getJugador_id()); // Asegúrate de que el objeto Jugador tenga un método getId() que retorne el id del jugador
+
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String personajeNombre = rs.getString("personaje_nombre");
+            
+            Personaje personaje = new Personaje(personajeNombre, personajeNombre);
+            equipo.add(personaje);
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    return equipo;
+}
+
 
 }
