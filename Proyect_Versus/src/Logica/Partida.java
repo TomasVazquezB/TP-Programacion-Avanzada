@@ -33,6 +33,10 @@ public class Partida {
     }
 
     public void jugar() {
+        // Asigna un equipo aleatorio a la máquina antes de jugar
+        List<Personaje> equipoAleatorio = cargarPersonajesDesdeBD(maquina);
+        maquina.setEquipo(equipoAleatorio);
+
         if (!jugador.puedeJugar() || !maquina.puedeJugar()) {
             System.out.println("No puedes iniciar la partida.");
             return;
@@ -51,7 +55,6 @@ public class Partida {
             throw e;
         }
     }
-
 
     private void realizarRonda() {
         Collections.shuffle(jugadorPersonaje);

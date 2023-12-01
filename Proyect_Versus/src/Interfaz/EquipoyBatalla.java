@@ -59,9 +59,7 @@ public class EquipoyBatalla extends JFrame {
 		
 		botonbatalla.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            Conexion conexion = new Conexion();
-	            Partida nuevaPartida = new Partida(usuario, conexion);
-	            nuevaPartida.jugar();
+	        	
 	            }
 	        });
 	        
@@ -82,15 +80,4 @@ public class EquipoyBatalla extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                Usuario ejemploUsuario = new Usuario("EjemploUsuario");
-                EquipoyBatalla frame = new EquipoyBatalla(ejemploUsuario);
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-	}
 }

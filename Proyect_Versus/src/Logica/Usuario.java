@@ -280,17 +280,21 @@ public class Usuario{
 
         boolean exito = con.guardarEquipoEnBaseDeDatos(this, equipo);
         if (!exito) {
-            throw new RuntimeException("Hubo un problema al guardar el equipo en la base de datos");
+            throw new RuntimeException("Hubo un problema al guardar el equipo en la base de datos: ");
         }
 
         this.equipo = equipo;
     }
-
+	
 	public boolean puedeJugar() {
-	    if (this.equipo == null || this.equipo.isEmpty()) {
+	    List<Personaje> equipoDB = con.obtenerEquipoDeBaseDeDatos(this);
+	    System.out.println("Equipo obtenido de la base de datos: " + equipoDB);
+	    if (equipoDB == null || equipoDB.isEmpty()) {
 	        JOptionPane.showMessageDialog(null,"Debes seleccionar o crear un equipo antes de jugar una partida.");
 	        return false;
 	    }
+	    this.setEquipo(equipoDB); // Asegúrate de que el jugador tenga un equipo antes de jugar
 	    return true;
 	}
+
 }

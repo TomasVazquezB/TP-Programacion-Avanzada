@@ -1,7 +1,6 @@
 package Logica;
 
 import BD.Conexion;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,11 +81,7 @@ public class Personaje {
             return null;
         }
     }
-
-    public int getId() {
-        return 0;
-    }
-
+    
     public int obtenerVida() {
         return (estadisticas != null) ? estadisticas.getHp() : 0;
     }
