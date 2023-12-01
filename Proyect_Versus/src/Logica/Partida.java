@@ -1,125 +1,154 @@
 package Logica;
-import java.sql.*;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import BD.Conexion;
+
+
 import javax.swing.JOptionPane;
 
 public class Partida {
     private Usuario jugador;
     private Usuario maquina;
-    private Personaje jugadorPersonaje;
-    private Personaje maquinaPersonaje;
+    private List<Personaje> jugadorPersonaje;
+    private List<Personaje> maquinaPersonaje;
+    private Conexion con; 
 
-    public Partida(Usuario jugador) {
+    public Partida(Usuario jugador, Conexion con) {
         this.jugador = jugador;
+        this.con = con;
+        this.jugadorPersonaje = cargarPersonajesDesdeBD(jugador);
+        this.maquina = new Usuario("Maquina"); 
+        this.maquinaPersonaje = cargarPersonajesDesdeBD(jugador);
+    }
+
+    public void iniciarPartida() {
+        if (jugador.puedeJugar() && maquina.puedeJugar()) {
+            System.out.println("¡La partida ha comenzado!");
+        } else {
+            System.out.println("No puedes iniciar la partida.");
+        }
     }
 
     public void jugar() {
-        jugadorPersonaje = seleccionarPersonaje(jugador);
-        maquinaPersonaje = seleccionarPersonajeMaquina();
+        if (!jugador.puedeJugar() || !maquina.puedeJugar()) {
+            System.out.println("No puedes iniciar la partida.");
+            return;
+        }
 
-        while (jugadorPersonaje.getVida() > 0 && maquinaPersonaje.getVida() > 0) {
-            realizarAtaque(jugador, jugadorPersonaje, maquina, maquinaPersonaje);
-            if (maquinaPersonaje.getVida() <= 0) {
-                registrarPartida(jugador, "Victoria");
-                JOptionPane.showMessageDialog(null, "¡Has derrotado a la máquina!");
-                break;
+        try {
+            System.out.println("¡La partida ha comenzado!");
+
+            while (jugadorTieneVida() && maquinaTieneVida()) {
+                realizarRonda();
             }
 
-            realizarAtaqueMaquina(jugador, jugadorPersonaje, maquina, maquinaPersonaje);
-            if (jugadorPersonaje.getVida() <= 0) {
-                registrarPartida(jugador, "Derrota");
-                JOptionPane.showMessageDialog(null, "¡La máquina te ha derrotado!");
-                break;
+            determinarResultadoPartida();
+        } catch (Exception e) {
+            System.out.println("Error durante la batalla: " + e.getMessage());
+            throw e;
+        }
+    }
+
+
+    private void realizarRonda() {
+        Collections.shuffle(jugadorPersonaje);
+        Collections.shuffle(maquinaPersonaje);
+        for (Personaje personaje : jugadorPersonaje) {
+            realizarTurno(personaje, maquinaPersonaje);
+        }
+        for (Personaje personaje : maquinaPersonaje) {
+            realizarTurno(personaje, jugadorPersonaje);
+        }
+    }
+
+    private void realizarTurno(Personaje atacante, List<Personaje> defensores) {
+        Personaje defensor = seleccionarDefensorAleatorio(defensores);
+        if (defensor.obtenerVida() > 0) {
+            realizarAtaque(atacante, defensor);
+            if (defensor.obtenerVida() <= 0) {
+                defensores.remove(defensor);
+                System.out.println("¡" + defensor.getNombre() + " ha sido derrotado!");
             }
         }
     }
 
-    private Personaje seleccionarPersonaje(Usuario jugador) {
-        List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
+    private Personaje seleccionarDefensorAleatorio(List<Personaje> personajes) {
+        Collections.shuffle(personajes);
+        return personajes.get(0);
+    }
 
-        if (personajesDisponibles.isEmpty()) {
-            // Maneja el caso en el que no hay personajes disponibles (puedes mostrar un mensaje de error, por ejemplo).
-            return null;
-        }
+    private void realizarAtaque(Personaje atacante, Personaje defensor) {
+        int ataque = atacante.getEstadisticas().getAtk();
+        int defensa = defensor.getEstadisticas().getEr();
+        int danio = Math.max(ataque - defensa, 0);
+        int vidaActualDefensor = defensor.obtenerVida();
+        int nuevoValorVidaDefensor = vidaActualDefensor - danio;
+        defensor.getEstadisticas().setHp(Math.max(nuevoValorVidaDefensor, 0));
+        System.out.println(atacante.getNombre() + " atacó a " + defensor.getNombre() + " y causó " + danio + " de daño.");
+    }
 
-        Object[] opcionesPersonajes = personajesDisponibles.toArray();
-        Object seleccion = JOptionPane.showInputDialog(null, "Selecciona un personaje para el combate, " + jugador.getNombre() + ":",
-                "Selección de Personaje", JOptionPane.QUESTION_MESSAGE, null, opcionesPersonajes, opcionesPersonajes[0]);
+    private void determinarResultadoPartida() {
+        String mensaje = "";
 
-        if (seleccion != null) {
-            return (Personaje) seleccion;
+        if (!jugadorTieneVida()) {
+            mensaje = "¡La máquina ha ganado la batalla!";
+        } else if (!maquinaTieneVida()) {
+            mensaje = "¡Has ganado la batalla!";
         } else {
-            return null;
+            mensaje = "La batalla terminó en empate.";
+        }
+
+        if (!mensaje.isEmpty()) {
+            System.out.println(mensaje);
         }
     }
 
-
-    private List<Personaje> obtenerPersonajesDisponibles() {
-        List<Personaje> personajesDisponibles = new ArrayList<>();
-        String jdbcUrl = "jdbc:mysql://localhost:3463/TuBaseDeDatos";
-        String usuario = "tuUsuario";
-        String contrasena = "tuContrasena";
-
-        try {
-            Connection conexion = DriverManager.getConnection(jdbcUrl, usuario, contrasena);
-            String sql = "SELECT nombre, vida FROM Personajes";
-            Statement statement = conexion.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-
-            while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                int vida = rs.getInt("vida");
-                Personaje personaje = new Personaje(nombre, nombre, null, vida);
-                personajesDisponibles.add(personaje);
+    private boolean jugadorTieneVida() {
+        for (Personaje personaje : jugadorPersonaje) {
+            if (personaje.obtenerVida() > 0) {
+                return true;
             }
-
-            rs.close();
-            statement.close();
-            conexion.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-
-        return personajesDisponibles;
+        return false;
     }
 
-    private Personaje seleccionarPersonajeMaquina() {
-        List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
-        int index = (int) (Math.random() * personajesDisponibles.size());
-        return personajesDisponibles.get(index);
+    private boolean maquinaTieneVida() {
+        for (Personaje personaje : maquinaPersonaje) {
+            if (personaje.obtenerVida() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private void realizarAtaque(Usuario atacante, Personaje atacantePersonaje, Usuario defensor, Personaje defensorPersonaje) {
-        int dano = 10; // Daño fijo
-        defensorPersonaje.reducirVida(dano);
-        JOptionPane.showMessageDialog(null, atacante.getNombre() + " ataca a " + defensor.getNombre() + " y causa " + dano + " de daño.");
-    }
-
-    private void realizarAtaqueMaquina(Usuario jugador, Personaje jugadorPersonaje, Usuario maquina, Personaje maquinaPersonaje) {
-        int dano = 8; // Daño fijo de la máquina
-        jugadorPersonaje.reducirVida(dano);
-        JOptionPane.showMessageDialog(null, maquina.getNombre() + " ataca a " + jugador.getNombre() + " y causa " + dano + " de daño.");
-    }
-
-    private void registrarPartida(Usuario usuario, String resultado) {
-        String jdbcUrl = "jdbc:mysql://localhost:3463/TuBaseDeDatos";
-        String usuarioDB = "tuUsuario";
-        String contrasenaDB = "tuContrasena";
-
+    private List<Personaje> cargarPersonajesDesdeBD(Usuario usuario) {
         try {
-            Connection conexion = DriverManager.getConnection(jdbcUrl, usuarioDB, contrasenaDB);
-            String sql = "INSERT INTO Partidas (usuario_id, resultado) VALUES (?, ?)";
-            PreparedStatement statement = conexion.prepareStatement(sql);
-            statement.setInt(1, usuario.getJugador_id()); // Asume que tienes un método getJugadorId() en Usuario
-            statement.setString(2, resultado);
-            statement.executeUpdate();
-
-            statement.close();
-            conexion.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            Conexion conexion = new Conexion();
+            List<String> nombresPersonajesDisponibles = conexion.obtenerNombresPersonajesDisponibles();
+            List<Personaje> personajesAleatorios = new ArrayList<>();
+            Random random = new Random();
+            int cantidadPersonajes = obtenerCantidadPersonajesAleatorios(personajesAleatorios);
+            for (int i = 0; i < cantidadPersonajes; i++) {
+                int indiceAleatorio = random.nextInt(nombresPersonajesDisponibles.size());
+                String nombrePersonaje = nombresPersonajesDisponibles.get(indiceAleatorio);
+                Personaje nuevoPersonaje = new Personaje(nombrePersonaje, nombrePersonaje);
+                personajesAleatorios.add(nuevoPersonaje);
+                nombresPersonajesDisponibles.remove(indiceAleatorio);
+            }
+            return personajesAleatorios;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar personajes aleatorios: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
-}
 
+    private int obtenerCantidadPersonajesAleatorios(List<Personaje> personajesDisponibles) {
+        int maxCantidad = Math.min(4, personajesDisponibles.size());
+        return (int) (Math.random() * maxCantidad) + 1;
+    }
+      
+    
+}

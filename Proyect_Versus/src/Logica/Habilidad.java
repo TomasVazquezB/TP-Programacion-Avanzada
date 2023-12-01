@@ -6,19 +6,43 @@ public class Habilidad {
 	
     private String nombre;
     private String descripcion;
-    private int daño;
+    private int efecto;
+	private String personaje_nombre;
 
-    public Habilidad(String nombre, String descripcion, int daño) {
-		super();
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.daño = daño;
+    public String getPersonaje_nombre() {
+		return personaje_nombre;
 	}
+
+	public void setPersonaje_nombre(String personaje_nombre) {
+		this.personaje_nombre = personaje_nombre;
+	}
+
+	public Habilidad(String nombre, String descripcion, int efecto, String personaje_nombre) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.efecto = efecto;
+        this.personaje_nombre = personaje_nombre;
+    }
 
 	@Override
 	public String toString() {
-		return "Habilidad [nombre=" + nombre + ", descripcion=" + descripcion + ", daño=" + daño + "]";
+		return "Habilidad [nombre=" + nombre + ", descripcion=" + descripcion + ", efecto=" + efecto
+				+ ", personaje_nombre=" + personaje_nombre + "]";
 	}
+	
+    public int getEfecto() {
+		return efecto;
+	}
+
+	public void setEfecto(int efecto) {
+		this.efecto = efecto;
+	}
+
+	public Habilidad(String nombre) {
+        this.nombre = nombre;
+        this.descripcion = "Descripción por defecto";
+        this.efecto = 0;
+    }
 
 	public String getDescripcion() {
 		return descripcion;
@@ -28,12 +52,12 @@ public class Habilidad {
 		this.descripcion = descripcion;
 	}
 
-	public int getDaño() {
-		return daño;
+	public int getefecto() {
+		return efecto;
 	}
 
-	public void setDaño(int daño) {
-		this.daño = daño;
+	public void setefecto(int efecto) {
+		this.efecto = efecto;
 	}
 	
 	public String getNombre() {
@@ -45,6 +69,14 @@ public class Habilidad {
 	}
 
 	public void usarHabilidad(Personaje objetivo) {
-     JOptionPane.showMessageDialog(null,"Usando " + nombre + " contra " + objetivo.getNombre() + ". Daño: " + daño,"Personaje en uso",JOptionPane.DEFAULT_OPTION);
-    }
+	    JOptionPane.showMessageDialog(null, "Usando " + nombre + " contra " + objetivo.getNombre() + ". Efecto: " + efecto, "Personaje en uso", JOptionPane.DEFAULT_OPTION);
+
+	    Estadistica estadisticasObjetivo = objetivo.getEstadisticas();
+	    if (estadisticasObjetivo != null) {
+	        estadisticasObjetivo.reducirVida(efecto);
+	        JOptionPane.showMessageDialog(null, "Se ha aplicado " + efecto + " de daño a " + objetivo.getNombre() + ".", "Ataque exitoso", JOptionPane.DEFAULT_OPTION);
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No se pudo aplicar la habilidad a " + objetivo.getNombre() + ". Estadísticas no disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
 }

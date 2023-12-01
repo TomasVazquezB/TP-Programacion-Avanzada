@@ -1,6 +1,5 @@
 package Logica;
 
-import Logica.*;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,12 +9,74 @@ public class Validador {
 
     private Connection conexion;
     private PreparedStatement stmt;
+	private String nombre;
+	private String contrasena;
+	private int jugador_id;
+	private int nivelCuenta;
+	private int nivelClasificatorias;
+	private List<Partida> historial;
 
     public Validador(Connection conexion) {
         this.conexion = conexion;
     }
 
-    public Usuario ValidarIngreso(String nombre, String contrasena) {
+    @Override
+	public String toString() {
+		return "Validador [nombre=" + nombre + ", contrasena=" + contrasena + ", jugador_id=" + jugador_id
+				+ ", nivelCuenta=" + nivelCuenta + ", nivelClasificatorias=" + nivelClasificatorias + ", historial="
+				+ historial + "]";
+	}
+
+    public String getNombre() {
+    	return nombre;
+    }
+    
+    public void setNombre(String nombre) {
+    	this.nombre = nombre;
+    }
+    
+    public String getContrasena() {
+    	return contrasena;
+    }
+    
+    public void setContrasena(String contrasena) {
+    	this.contrasena = contrasena;
+    }
+    
+    public int getNivelCuenta() {
+    	return nivelCuenta;
+    }
+    
+    public void setNivelCuenta(int nivelCuenta) {
+    	this.nivelCuenta = nivelCuenta;
+    }
+    
+    public int getJugador_id() {
+    	return jugador_id;
+    }
+    
+    public void setJugador_id(int jugador_id) {
+    	this.jugador_id = jugador_id;
+    }
+    
+    public List<Partida> getHistorial() {
+    	return historial;
+    }
+    
+    public void setHistorial(List<Partida> historial) {
+    	this.historial = historial;
+    }
+    
+    public int getNivelClasificatorias() {
+    	return nivelClasificatorias;
+    }
+    
+    public void setNivelClasificatorias(int nivelClasificatorias) {
+    	this.nivelClasificatorias = nivelClasificatorias;
+    }
+
+
+	public Usuario ValidarIngreso(String nombre, String contrasena) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos");
             return null;
@@ -62,7 +123,7 @@ public class Validador {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error al editar usuario: " + e.getMessage());
             }
-            return false; // Error al editar
+            return false; 
         }
     }
 
@@ -80,7 +141,7 @@ public class Validador {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error al eliminar usuario: " + e.getMessage());
             }
-            return false; // Error al eliminar
+            return false; 
         }
     }
 
@@ -91,13 +152,12 @@ public class Validador {
             stmt = conexion.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                String nombre = resultado.getString("nombre");
-                String contrasena = resultado.getString("contrasena");
-                int jugador_id = resultado.getInt("jugador_id");
-                int nivelCuenta = resultado.getInt("nivelCuenta");
-                int nivelClasificatorias = resultado.getInt("nivelClasificatorias");
-                List<Partida> historial = obtenerHistorialPorUsuario(resultado.getInt("id"));
-                // agregar el constructor en la clase Usuario usuarios.add(new Usuario(nombre, contrasena, nivelCuenta, nivelClasificatorias, historial));
+                setNombre(resultado.getString("nombre"));
+                setContrasena(resultado.getString("contrasena"));
+                setJugador_id(resultado.getInt("jugador_id"));
+                setNivelCuenta(resultado.getInt("nivelCuenta"));
+                setNivelClasificatorias(resultado.getInt("nivelClasificatorias"));
+                setHistorial(obtenerHistorialPorUsuario(resultado.getInt("id")));
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al mostrar usuarios: " + e.getMessage());
@@ -113,8 +173,7 @@ public class Validador {
             stmt.setInt(1, idUsuario);
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                // Recupera información de cada partida y agrégala al historial
-                // Agrega partidas a la lista historial
+               
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al obtener el historial de usuario: " + e.getMessage());
@@ -124,35 +183,30 @@ public class Validador {
     
     public boolean registrarUsuario(Usuario usuario) {
         try {
-            // Verificar si el nombre de usuario ya existe en la base de datos
             String selectUsuarioSQL = "SELECT COUNT(*) FROM usuario WHERE nombre = ?";
             stmt = conexion.prepareStatement(selectUsuarioSQL);
             stmt.setString(1, usuario.getNombre());
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next() && rs.getInt(1) > 0) {
-                // El nombre de usuario ya existe, por lo que no se puede registrar.
                 return false;
             }
 
-            // Obtener el ID máximo actual en la tabla 'jugador'
             String selectMaxJugadorIdSQL = "SELECT MAX(id) FROM jugador";
             stmt = conexion.prepareStatement(selectMaxJugadorIdSQL);
             rs = stmt.executeQuery();
-            int jugadorId = 1; // Valor predeterminado si no hay jugadores existentes.
+            int jugadorId = 1; 
 
             if (rs.next()) {
                 jugadorId = rs.getInt(1) + 1;
             }
 
-            // Insertar el nuevo jugador
             String insertJugadorSQL = "INSERT INTO jugador (id, nivel) VALUES (?, ?)";
             stmt = conexion.prepareStatement(insertJugadorSQL);
             stmt.setInt(1, jugadorId);
             stmt.setInt(2, usuario.getNivelCuenta());
             stmt.executeUpdate();
 
-            // Insertar el usuario con el jugador_id obtenido
             String insertUsuarioSQL = "INSERT INTO usuario (nombre, contrasena, jugador_id, nivelCuenta, nivelClasificatorias) VALUES (?, ?, ?, ?, ?)";
             stmt = conexion.prepareStatement(insertUsuarioSQL);
             stmt.setString(1, usuario.getNombre());
@@ -160,12 +214,11 @@ public class Validador {
             stmt.setInt(3, jugadorId);
             stmt.setInt(4, usuario.getNivelCuenta());
             stmt.setInt(5, usuario.getNivelClasificatorias());
-
             stmt.executeUpdate();
-            return true; // Registro exitoso
+            return true; 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al registrar usuario: " + e.getMessage());
-            return false; // Error en el registro
+            return false; 
         }
     }
 }
