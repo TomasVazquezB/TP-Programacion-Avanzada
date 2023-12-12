@@ -179,8 +179,7 @@ public boolean eliminarEquipo(Usuario usuario) {
             String sql = "DELETE FROM equipo WHERE jugador_id = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, usuario.getJugador_id());
-
-       
+            
             stmt.executeUpdate();
 
             conn.commit();
@@ -446,8 +445,7 @@ public List<Personaje> obtenerEquipoDeBaseDeDatos(Usuario usuario) {
     try {
         con = conectar();
         ps = con.prepareStatement("SELECT personaje_nombre FROM equipo WHERE jugador_id = ?");
-        ps.setInt(1, usuario.getJugador_id()); // Asegúrate de que el objeto Jugador tenga un método getId() que retorne el id del jugador
-
+        ps.setInt(1, usuario.getJugador_id()); 
         rs = ps.executeQuery();
 
         while (rs.next()) {
@@ -469,6 +467,4 @@ public List<Personaje> obtenerEquipoDeBaseDeDatos(Usuario usuario) {
 
     return equipo;
 }
-
-
 }

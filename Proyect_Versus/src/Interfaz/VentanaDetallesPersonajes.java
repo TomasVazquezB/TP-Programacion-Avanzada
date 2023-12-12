@@ -2,11 +2,10 @@ package Interfaz;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
-import Logica.Estadistica;
-import Logica.Habilidad;
-import BD.Conexion;
+import Logica.*;
+import BD.*;
 
 public class VentanaDetallesPersonajes extends JFrame {
 

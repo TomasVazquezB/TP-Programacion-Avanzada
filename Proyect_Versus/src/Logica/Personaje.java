@@ -1,9 +1,9 @@
 package Logica;
 
-import BD.Conexion;
+import BD.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Personaje {
     private String nombre;

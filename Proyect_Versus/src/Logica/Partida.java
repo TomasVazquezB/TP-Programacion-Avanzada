@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import BD.Conexion;
-
-
-import javax.swing.JOptionPane;
+import BD.*;
+import javax.swing.*;
 
 public class Partida {
     private Usuario jugador;
@@ -26,9 +24,9 @@ public class Partida {
 
     public void iniciarPartida() {
         if (jugador.puedeJugar() && maquina.puedeJugar()) {
-            System.out.println("¡La partida ha comenzado!");
+        	JOptionPane.showMessageDialog(null, "¡La partida ha comenzado!" , "Partida Empezada", JOptionPane.DEFAULT_OPTION);
         } else {
-            System.out.println("No puedes iniciar la partida.");
+        	JOptionPane.showMessageDialog(null, "No puedes iniciar la partida.", "Error al iniciar partida", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -45,20 +43,20 @@ public class Partida {
         maquina.setEquipo(equipoAleatorio);
 
         if (!jugador.puedeJugar() || !maquina.puedeJugar()) {
-            System.out.println("No puedes iniciar la partida.");
+        	JOptionPane.showMessageDialog(null, "No puedes iniciar la partida.", "Error al iniciar partida",JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         try {
-            System.out.println("¡La partida ha comenzado!");
-
+        	JOptionPane.showMessageDialog(null, "¡La partida ha comenzado!", "Partida Iniciada",JOptionPane.DEFAULT_OPTION);
+        	
             while (jugadorTieneVida() && maquinaTieneVida()) {
                 realizarRonda();
             }
 
             determinarResultadoPartida();
         } catch (Exception e) {
-            System.out.println("Error durante la batalla: " + e.getMessage());
+        	JOptionPane.showMessageDialog(null, "Error durante la batalla: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
             throw e;
         }
     }
@@ -80,11 +78,10 @@ public class Partida {
             realizarAtaque(atacante, defensor);
             if (defensor.obtenerVida() <= 0) {
                 defensores.remove(defensor);
-                System.out.println("¡" + defensor.getNombre() + " ha sido derrotado!");
+                JOptionPane.showMessageDialog(null,"¡" + defensor.getNombre() + " ha sido derrotado!", "Derrotado", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
-
     private Personaje seleccionarDefensorAleatorio(List<Personaje> personajes) {
         Collections.shuffle(personajes);
         return personajes.get(0);
@@ -97,7 +94,7 @@ public class Partida {
         int vidaActualDefensor = defensor.obtenerVida();
         int nuevoValorVidaDefensor = vidaActualDefensor - danio;
         defensor.getEstadisticas().setHp(Math.max(nuevoValorVidaDefensor, 0));
-        System.out.println(atacante.getNombre() + " atacó a " + defensor.getNombre() + " y causó " + danio + " de daño.");
+        JOptionPane.showMessageDialog(null, atacante.getNombre() + " atacó a " + defensor.getNombre() + " y causó " + danio + " de daño.","Ataque",JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void determinarResultadoPartida() {
@@ -112,7 +109,7 @@ public class Partida {
         }
 
         if (!mensaje.isEmpty()) {
-            System.out.println(mensaje);
+        	JOptionPane.showMessageDialog(null, mensaje, "Resultado",JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -150,7 +147,7 @@ public class Partida {
             }
             return personajesAleatorios;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar personajes aleatorios: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al cargar personajes aleatorios: " + e.getMessage(), "Error cargar personajes", JOptionPane.ERROR_MESSAGE);
             return new ArrayList<>();
         }
     }

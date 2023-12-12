@@ -66,8 +66,6 @@ public class Estadistica {
 	            hp = 0;
 	        } else {
 	            hp -= cantidad;
-	        }
-	
-		
+	        }	
 }
 }

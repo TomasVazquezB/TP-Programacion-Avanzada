@@ -4,9 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import BD.Conexion;
+import javax.swing.*;
+import BD.*;
 
 public class Usuario{
 	
@@ -22,7 +21,6 @@ public class Usuario{
     private PreparedStatement stmt;
 	private List<Personaje> equipo;
 	
-    
     public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
         this.contrasena = contrasena;
@@ -125,7 +123,7 @@ public class Usuario{
             conexion.close();
             return true;
         } catch (Exception e) {
-            System.out.println("Error al guardar");
+        	JOptionPane.showMessageDialog(null, "Error al guardar", "Error",JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -143,7 +141,7 @@ public class Usuario{
             conexion.close();
             return true;
         } catch (Exception e) {
-            System.out.println("Error al guardar");
+        	JOptionPane.showMessageDialog(null, "Error al guardar", "Error",JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -156,7 +154,7 @@ public class Usuario{
             stmt.executeUpdate();
             return true;
         } catch (Exception e) {
-            System.out.println("Error al guardar");
+        	JOptionPane.showMessageDialog(null, "Error al guardar", "Error",JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
@@ -182,7 +180,7 @@ public class Usuario{
                 return usuarios;
             }
         } catch (Exception e) {
-            System.out.println("Error al guardar");
+        	JOptionPane.showMessageDialog(null, "Error al guardar", "Error",JOptionPane.ERROR_MESSAGE);
             return null;
         }
     }
@@ -246,13 +244,10 @@ public class Usuario{
                 .toArray(String[]::new);
         JComboBox<String> comboBox = new JComboBox<>(nombresYTipos);
 
-        int seleccion = JOptionPane.showOptionDialog(null, comboBox,
-                "Selecciona un personaje para tu equipo:", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Aceptar"}, null);
+  int seleccion = JOptionPane.showOptionDialog(null, comboBox,"Selecciona un personaje para tu equipo:", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Aceptar"}, null);
 
         if (seleccion == JOptionPane.OK_OPTION) {
             String selectedItem = (String) comboBox.getSelectedItem();
-            
             String[] parts = selectedItem.split(" - ");
             String nombreSeleccionado = parts[0];
 
@@ -280,7 +275,7 @@ public class Usuario{
 
         boolean exito = con.guardarEquipoEnBaseDeDatos(this, equipo);
         if (!exito) {
-            throw new RuntimeException("Hubo un problema al guardar el equipo en la base de datos: ");
+            throw new RuntimeException("Hubo un problema al guardar el equipo en la base de datos:");
         }
 
         this.equipo = equipo;
@@ -288,9 +283,9 @@ public class Usuario{
 	
 	public boolean puedeJugar() {
 	    List<Personaje> equipoDB = con.obtenerEquipoDeBaseDeDatos(this);
-	    System.out.println("Equipo obtenido de la base de datos: " + equipoDB);
+	    JOptionPane.showMessageDialog(null, "Equipo obtenido de la base de datos: " + equipoDB, "Equipo",JOptionPane.DEFAULT_OPTION);
 	    if (equipoDB == null || equipoDB.isEmpty()) {
-	        JOptionPane.showMessageDialog(null,"Debes seleccionar o crear un equipo antes de jugar una partida.");
+	        JOptionPane.showMessageDialog(null,"Debes seleccionar o crear un equipo antes de jugar una partida.","Seleccion Personaje",JOptionPane.INFORMATION_MESSAGE);
 	        return false;
 	    }
 	    this.setEquipo(equipoDB);

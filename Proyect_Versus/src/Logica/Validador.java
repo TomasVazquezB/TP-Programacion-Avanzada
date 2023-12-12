@@ -75,10 +75,9 @@ public class Validador {
     	this.nivelClasificatorias = nivelClasificatorias;
     }
 
-
 	public Usuario ValidarIngreso(String nombre, String contrasena) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos");
+            JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos", "Campos Vacios",JOptionPane.INFORMATION_MESSAGE);
             return null;
         } else {
         	 String[] datos = new String[4];
@@ -99,7 +98,7 @@ public class Validador {
                         return usuario;
                     }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al validar inicio de sesión: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al validar inicio de sesión: " + e.getMessage(), "Error al validar",JOptionPane.ERROR_MESSAGE);
             }
         }
 		return null;
@@ -107,7 +106,7 @@ public class Validador {
 
     public boolean ValidarEditar(String nombre, String contrasena, int jugador_id,int nivelCuenta, int nivelClasificatorias) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos");
+            JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos"," Campos Vacios",JOptionPane.INFORMATION_MESSAGE);
             return false;
         } else {
             try {
@@ -121,7 +120,7 @@ public class Validador {
                 int filasActualizadas = stmt.executeUpdate();
                 return filasActualizadas > 0;
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al editar usuario: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al editar usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
             return false; 
         }
@@ -129,7 +128,7 @@ public class Validador {
 
     public boolean ValidarEliminar(String nombre) {
         if (nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nombre vacío");
+            JOptionPane.showMessageDialog(null, "Nombre vacío", "Campo Vacio",JOptionPane.INFORMATION_MESSAGE);
             return false;
         } else {
             try {
@@ -139,7 +138,7 @@ public class Validador {
                 int filasEliminadas = stmt.executeUpdate();
                 return filasEliminadas > 0;
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al eliminar usuario: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al eliminar usuario: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
             }
             return false; 
         }
@@ -160,7 +159,7 @@ public class Validador {
                 setHistorial(obtenerHistorialPorUsuario(resultado.getInt("id")));
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al mostrar usuarios: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al mostrar usuarios: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
         }
         return usuarios;
     }
@@ -176,7 +175,7 @@ public class Validador {
                
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener el historial de usuario: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al obtener el historial de usuario: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
         }
         return historial;
     }
@@ -217,7 +216,7 @@ public class Validador {
             stmt.executeUpdate();
             return true; 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al registrar usuario: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al registrar usuario: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
             return false; 
         }
     }
