@@ -406,7 +406,7 @@ public List<Habilidad> obtenerHabilidadesPorNombre(String nombrePersonaje) {
 
     try {
         
-    	String query = "SELECT nombre, descripcion, efecto, personaje_nombre " +
+    	String query = "SELECT nombre, descripcion,personaje_nombre " +
                 "FROM habilidades " +
                 "WHERE personaje_nombre = ?";
         try (PreparedStatement stmt = con.prepareStatement(query)) {
@@ -418,10 +418,9 @@ public List<Habilidad> obtenerHabilidadesPorNombre(String nombrePersonaje) {
                 while (rs.next()) {
                     String nombreHabilidad = rs.getString("nombre");
                     String descripcion = rs.getString("descripcion");
-                    int efecto = rs.getInt("efecto");
                     String personaje_nombre = rs.getString("personaje_nombre");
 
-                    Habilidad habilidad = new Habilidad(nombreHabilidad, descripcion, efecto, personaje_nombre);
+                    Habilidad habilidad = new Habilidad(nombreHabilidad, descripcion, personaje_nombre);
                     habilidades.add(habilidad);
                 }
             }

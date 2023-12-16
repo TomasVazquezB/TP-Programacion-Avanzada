@@ -13,21 +13,29 @@ public class Validador {
 	private String contrasena;
 	private int jugador_id;
 	private int nivelCuenta;
-	private int nivelClasificatorias;
 	private List<Partida> historial;
 
     public Validador(Connection conexion) {
         this.conexion = conexion;
     }
-
-    @Override
-	public String toString() {
-		return "Validador [nombre=" + nombre + ", contrasena=" + contrasena + ", jugador_id=" + jugador_id
-				+ ", nivelCuenta=" + nivelCuenta + ", nivelClasificatorias=" + nivelClasificatorias + ", historial="
-				+ historial + "]";
+  
+    public Validador(String nombre, String contrasena, int jugador_id, int nivelCuenta, List<Partida> historial) {
+		super();
+		this.nombre = nombre;
+		this.contrasena = contrasena;
+		this.jugador_id = jugador_id;
+		this.nivelCuenta = nivelCuenta;
+		this.historial = historial;
 	}
 
-    public String getNombre() {
+
+	@Override
+	public String toString() {
+		return "Validador [nombre=" + nombre + ", contrasena=" + contrasena + ", jugador_id=" + jugador_id
+				+ ", nivelCuenta=" + nivelCuenta + ", historial=" + historial + "]";
+	}
+
+	public String getNombre() {
     	return nombre;
     }
     
@@ -66,15 +74,7 @@ public class Validador {
     public void setHistorial(List<Partida> historial) {
     	this.historial = historial;
     }
-    
-    public int getNivelClasificatorias() {
-    	return nivelClasificatorias;
-    }
-    
-    public void setNivelClasificatorias(int nivelClasificatorias) {
-    	this.nivelClasificatorias = nivelClasificatorias;
-    }
-
+     
 	public Usuario ValidarIngreso(String nombre, String contrasena) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos", "Campos Vacios",JOptionPane.INFORMATION_MESSAGE);
@@ -104,19 +104,18 @@ public class Validador {
 		return null;
     }
 
-    public boolean ValidarEditar(String nombre, String contrasena, int jugador_id,int nivelCuenta, int nivelClasificatorias) {
+    public boolean ValidarEditar(String nombre, String contrasena, int jugador_id,int nivelCuenta) {
         if (nombre.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Nombre o contraseña vacíos"," Campos Vacios",JOptionPane.INFORMATION_MESSAGE);
             return false;
         } else {
             try {
-                String sql = "UPDATE usuario SET contrasena = ?, jugador_id = ?, nivelCuenta = ?, nivelClasificatorias = ? WHERE nombre = ?";
+                String sql = "UPDATE usuario SET contrasena = ?, jugador_id = ?, nivelCuenta = ? WHERE nombre = ?";
                 stmt = conexion.prepareStatement(sql);
                 stmt.setString(1, nombre);
                 stmt.setString(2, contrasena);
                 stmt.setInt(3, jugador_id);
                 stmt.setInt(4, nivelCuenta);
-                stmt.setInt(5, nivelClasificatorias);
                 int filasActualizadas = stmt.executeUpdate();
                 return filasActualizadas > 0;
             } catch (Exception e) {
@@ -155,7 +154,6 @@ public class Validador {
                 setContrasena(resultado.getString("contrasena"));
                 setJugador_id(resultado.getInt("jugador_id"));
                 setNivelCuenta(resultado.getInt("nivelCuenta"));
-                setNivelClasificatorias(resultado.getInt("nivelClasificatorias"));
                 setHistorial(obtenerHistorialPorUsuario(resultado.getInt("id")));
             }
         } catch (Exception e) {
@@ -206,13 +204,12 @@ public class Validador {
             stmt.setInt(2, usuario.getNivelCuenta());
             stmt.executeUpdate();
 
-            String insertUsuarioSQL = "INSERT INTO usuario (nombre, contrasena, jugador_id, nivelCuenta, nivelClasificatorias) VALUES (?, ?, ?, ?, ?)";
+            String insertUsuarioSQL = "INSERT INTO usuario (nombre, contrasena, jugador_id, nivelCuenta) VALUES (?, ?, ?, ?)";
             stmt = conexion.prepareStatement(insertUsuarioSQL);
             stmt.setString(1, usuario.getNombre());
             stmt.setString(2, usuario.getContrasena());
             stmt.setInt(3, jugadorId);
             stmt.setInt(4, usuario.getNivelCuenta());
-            stmt.setInt(5, usuario.getNivelClasificatorias());
             stmt.executeUpdate();
             return true; 
         } catch (Exception e) {

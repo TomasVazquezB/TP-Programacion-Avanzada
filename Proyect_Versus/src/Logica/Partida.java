@@ -21,15 +21,7 @@ public class Partida {
         this.maquina = new Usuario("Maquina"); 
         this.maquinaPersonaje = cargarPersonajesDesdeBD(jugador);
     }
-
-    public void iniciarPartida() {
-        if (jugador.puedeJugar() && maquina.puedeJugar()) {
-        	JOptionPane.showMessageDialog(null, "¡La partida ha comenzado!" , "Partida Empezada", JOptionPane.DEFAULT_OPTION);
-        } else {
-        	JOptionPane.showMessageDialog(null, "No puedes iniciar la partida.", "Error al iniciar partida", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
+    
     public Conexion getCon() {
     	return con;
     }
@@ -38,6 +30,46 @@ public class Partida {
     	this.con = con;
     }
     
+    public Usuario getJugador() {
+		return jugador;
+	}
+    
+	public void setJugador(Usuario jugador) {
+		this.jugador = jugador;
+	}
+
+	public Usuario getMaquina() {
+		return maquina;
+	}
+
+	public void setMaquina(Usuario maquina) {
+		this.maquina = maquina;
+	}
+
+	public List<Personaje> getJugadorPersonaje() {
+		return jugadorPersonaje;
+	}
+
+	public void setJugadorPersonaje(List<Personaje> jugadorPersonaje) {
+		this.jugadorPersonaje = jugadorPersonaje;
+	}
+
+	public List<Personaje> getMaquinaPersonaje() {
+		return maquinaPersonaje;
+	}
+
+	public void setMaquinaPersonaje(List<Personaje> maquinaPersonaje) {
+		this.maquinaPersonaje = maquinaPersonaje;
+	}
+
+	public void iniciarPartida() {
+        if (jugador.puedeJugar() && maquina.puedeJugar()) {
+        	JOptionPane.showMessageDialog(null, "¡La partida ha comenzado!" , "Partida Empezada", JOptionPane.DEFAULT_OPTION);
+        } else {
+        	JOptionPane.showMessageDialog(null, "No puedes iniciar la partida.", "Error al iniciar partida", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+	
     public void jugar() {
         List<Personaje> equipoAleatorio = cargarPersonajesDesdeBD(maquina);
         maquina.setEquipo(equipoAleatorio);

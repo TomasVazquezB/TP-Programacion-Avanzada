@@ -12,7 +12,6 @@ public class Usuario{
     private String nombre;
     private String contrasena;
     private int nivelCuenta;
-    private int nivelClasificatorias;
     private int jugador_id;
     private List<Partida> historial; 
     private Personaje personaje;
@@ -25,17 +24,15 @@ public class Usuario{
         this.nombre = nombre;
         this.contrasena = contrasena;
         this.nivelCuenta = 1;
-        this.nivelClasificatorias = 1;
         this.historial = new LinkedList<>();
         this.jugador_id = con.obtenerIdJugador(conexion,nombre, contrasena);
         
     }
 
-    public Usuario (String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias, int jugador_id,List<Partida> historial) {
+    public Usuario (String nombre, String contrasena, int nivelCuenta, int jugador_id,List<Partida> historial) {
     	this.nombre = nombre;
     	this.contrasena = contrasena;
     	this.nivelCuenta = nivelCuenta;
-    	this.nivelClasificatorias = nivelClasificatorias;
     	this.jugador_id = jugador_id;
     	this.historial = historial;
     }
@@ -44,32 +41,23 @@ public class Usuario{
         this.nombre = nombre;
         this.contrasena = "contrasena_maquina"; 
         this.nivelCuenta = 1; 
-        this.nivelClasificatorias = 10; 
     }
 
     @Override
-    public String toString() {
-    	return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
-    			+ ", nivelClasificatorias=" + nivelClasificatorias + ", jugador_id=" + jugador_id + ", historial="
-    			+ historial + ", personaje=" + personaje + "]";
-    }
+	public String toString() {
+		return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
+				+ ", jugador_id=" + jugador_id + ", historial=" + historial + ", personaje=" + personaje + ", equipo="
+				+ equipo + "]";
+	}
 
-    public int getNivelCuenta() {
+	public int getNivelCuenta() {
     	return nivelCuenta;
     }
     
     public void setNivelCuenta(int nivelCuenta) {
     	this.nivelCuenta = nivelCuenta;
     }
-    
-    public int getNivelClasificatorias() {
-    	return nivelClasificatorias;
-    }
-    
-    public void setNivelClasificatorias(int nivelClasificatorias) {
-    	this.nivelClasificatorias = nivelClasificatorias;
-    }
-    
+      
     public String getNombre() {
     	return nombre;
     }
@@ -111,14 +99,13 @@ public class Usuario{
     }
     
 	public boolean guardar() {
-        String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `jugador_id`, `nivelCuenta`, `nivelClasificatorias`) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `jugador_id`, `nivelCuenta`) VALUES (?,?,?,?)";
         try {
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, this.getNombre());
             stmt.setString(2, this.getContrasena());
             stmt.setLong(3, this.getJugador_id());
             stmt.setLong(4, this.getNivelCuenta());
-            stmt.setLong(5, this.getNivelClasificatorias());
             stmt.executeUpdate();
             conexion.close();
             return true;
@@ -129,14 +116,13 @@ public class Usuario{
     }
 
 	public boolean editar() {
-        String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`jugador_id`=? ,`nivelCuenta`=?,`nivelClasificatorias`=? WHERE nombre = ?";
+        String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`jugador_id`=? ,`nivelCuenta`=?  WHERE nombre = ?";
         try {
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, this.getNombre());
             stmt.setString(2, this.getContrasena());
             stmt.setLong(3, this.getJugador_id());
             stmt.setLong(4, this.getNivelCuenta());
-            stmt.setLong(5, this.getNivelClasificatorias());
             stmt.executeUpdate();
             conexion.close();
             return true;
@@ -222,7 +208,6 @@ public class Usuario{
             while (rs.next()) {
                 String nombre = rs.getString("nombre");
                 String tipo_de_personaje = rs.getString("tipo_de_personaje");
-
                 Personaje personaje = new Personaje(nombre, tipo_de_personaje);
                 personajesDisponibles.add(personaje);
             }
@@ -291,5 +276,4 @@ public class Usuario{
 	    this.setEquipo(equipoDB);
 	    return true;
 	}
-
 }

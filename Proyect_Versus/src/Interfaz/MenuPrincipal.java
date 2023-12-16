@@ -51,7 +51,7 @@ public class MenuPrincipal extends JFrame {
         contentPane.add(botondearmarequipo);
 
         JButton botonbatalla = new JButton("Batalla");
-        botonbatalla.setBounds(190, 217, 121, 58);
+        botonbatalla.setBounds(180, 217, 121, 58);
         botonbatalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
         contentPane.add(botonbatalla);
 
