@@ -40,8 +40,8 @@ public class MenuPrincipal extends JFrame {
         textomenu.setBounds(141, -20, 226, 123);
         contentPane.add(textomenu);
 
-        JButton botondearmarequipo = new JButton("Armar Equipo");
-        botondearmarequipo.setBounds(10, 217, 121, 58);
+        JButton botondearmarequipo = new JButton("Armar y Seleccionar Equipo");
+        botondearmarequipo.setBounds(10, 217, 190, 58);
         botondearmarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
         botondearmarequipo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -49,9 +49,22 @@ public class MenuPrincipal extends JFrame {
             }
         });
         contentPane.add(botondearmarequipo);
-
+        
+        JButton botonseleccionarequipo = new JButton("Seleccionar Equipo");
+        botonseleccionarequipo.setBounds(170, 150, 161, 58);
+        botonseleccionarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        contentPane.add(botonseleccionarequipo);
+        
+        
+        botonseleccionarequipo.addActionListener(new ActionListener() {
+        	public void actionPerformed (ActionEvent e) {
+        		
+        		
+        	}
+        });
+        
         JButton botonbatalla = new JButton("Batalla");
-        botonbatalla.setBounds(180, 217, 121, 58);
+        botonbatalla.setBounds(230, 217, 100, 58);
         botonbatalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
         contentPane.add(botonbatalla);
 
@@ -85,7 +98,7 @@ public class MenuPrincipal extends JFrame {
             }
         });
 
-        botondesalir.setBounds(345, 217, 121, 58);
+        botondesalir.setBounds(360, 217, 100, 58);
         botondesalir.setFont(new Font("Tahoma", Font.PLAIN, 12));
         contentPane.add(botondesalir);
 
