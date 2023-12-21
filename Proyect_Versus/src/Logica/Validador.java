@@ -28,7 +28,6 @@ public class Validador {
 		this.historial = historial;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Validador [nombre=" + nombre + ", contrasena=" + contrasena + ", jugador_id=" + jugador_id
@@ -98,7 +97,7 @@ public class Validador {
                         return usuario;
                     }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al validar inicio de sesión: " + e.getMessage(), "Error al validar",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al validar inicio de sesión" + e.getMessage(), "Error al validar",JOptionPane.ERROR_MESSAGE);
             }
         }
 		return null;
@@ -119,7 +118,7 @@ public class Validador {
                 int filasActualizadas = stmt.executeUpdate();
                 return filasActualizadas > 0;
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al editar usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al editar usuario" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
             return false; 
         }
@@ -137,7 +136,7 @@ public class Validador {
                 int filasEliminadas = stmt.executeUpdate();
                 return filasEliminadas > 0;
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al eliminar usuario: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al eliminar usuario" + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
             }
             return false; 
         }
@@ -157,7 +156,7 @@ public class Validador {
                 setHistorial(obtenerHistorialPorUsuario(resultado.getInt("id")));
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al mostrar usuarios: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al mostrar usuarios" + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
         }
         return usuarios;
     }
@@ -173,7 +172,7 @@ public class Validador {
                
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener el historial de usuario: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al obtener el historial de usuario:" + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
         }
         return historial;
     }
@@ -213,7 +212,7 @@ public class Validador {
             stmt.executeUpdate();
             return true; 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al registrar usuario: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al registrar usuario" + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
             return false; 
         }
     }

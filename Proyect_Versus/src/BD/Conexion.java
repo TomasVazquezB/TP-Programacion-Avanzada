@@ -52,60 +52,49 @@ public boolean validarConexion() {
     }
 }
 
-public boolean guardarEquipoEnBaseDeDatos(Usuario usuario, List<Personaje> equipo) {
+public boolean guardarEquipoEnBaseDeDatos(Usuario usuario, String nombreEquipo, List<Personaje> equipo) {
     Connection conn = null;
     PreparedStatement stmt = null;
-
     try {
-     
         conn = conectar();
-
         if (!existeJugador(conn, usuario.getJugador_id())) {
             JOptionPane.showMessageDialog(null, "El jugador con ID " + usuario.getJugador_id() + " no existe.");
-           
             return false;
         }
-
         conn.setAutoCommit(false);
-
+        String sql = "INSERT INTO equipo (nombre_equipo, jugador_id) VALUES (?, ?)";
+        stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        stmt.setString(1, nombreEquipo);
+        stmt.setInt(2, usuario.getJugador_id());
+        stmt.executeUpdate();
+        ResultSet rs = stmt.getGeneratedKeys();
+        rs.next();
+        int equipoId = rs.getInt(1);
+        rs.close();
+        stmt.close();
         for (Personaje personaje : equipo) {
-            try {
-               
-                String sql = "INSERT INTO equipo (personaje_nombre, jugador_id) VALUES (?, ?)";
-
-                stmt = conn.prepareStatement(sql);
-
-                stmt.setString(1, personaje.getNombre());
-                stmt.setInt(2, usuario.getJugador_id());
-
-                stmt.executeUpdate();
-            } catch (SQLException e) {
-          
-                e.printStackTrace();
-
-                conn.rollback();
-                return false;
-            } finally {
-             
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
+            sql = "INSERT INTO personaje_equipo (equipo_id, personaje_nombre) VALUES (?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, equipoId);
+            stmt.setString(2, personaje.getNombre()); 
+            stmt.executeUpdate();
+            stmt.close();
         }
-
         conn.commit();
         return true;
     } catch (SQLException e) {
- 
         e.printStackTrace();
+        try {
+            conn.rollback();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
         return false;
     } finally {
-    
         if (conn != null) {
             try {
                 conn.close();
             } catch (SQLException e) {
-               
                 e.printStackTrace();
             }
         }
@@ -139,9 +128,9 @@ public int obtenerIdJugador(Connection conn, String nombre, String contrasena) {
         rs = stmt.executeQuery();
 
         if (rs.next()) {
+        	JOptionPane.showMessageDialog(null, "El jugador no existe o las credenciales son incorrectas");
             return rs.getInt("jugador_id");
         } else {
-            //JOptionPane.showMessageDialog(null, "El jugador no existe o las credenciales son incorrectas.");
             return -1; 
         }
     } catch (SQLException e) {
@@ -291,7 +280,7 @@ public boolean actualizarResultadoPartida(Usuario usuario, String resultado) {
         int filasAfectadas = stmt.executeUpdate();
 
         if (filasAfectadas > 0) {
-            //JOptionPane.showMessageDialog(null, "Resultado de la partida actualizado exitosamente.","Resultado",JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Resultado de la partida actualizado exitosamente.","Resultado",JOptionPane.DEFAULT_OPTION);
             return true;
         } else {
             JOptionPane.showMessageDialog(null, "Error al actualizar el resultado de la partida.","Error",JOptionPane.ERROR_MESSAGE);
@@ -324,9 +313,9 @@ public List<String> cargarPersonajesDesdeBD(Usuario usuario) {
     try {
         conn = conectar();
 
-        String sql = "SELECT personaje_nombre FROM equipo WHERE jugador_id = ?";
+        String sql = "SELECT personaje_nombre FROM personaje_equipo WHERE equipo_id = ?";
         stmt = conn.prepareStatement(sql);
-        stmt.setInt(1, usuario.getJugador_id());
+        stmt.setInt(1, usuario.getEquipoId());
 
         rs = stmt.executeQuery();
 
@@ -349,6 +338,36 @@ public List<String> cargarPersonajesDesdeBD(Usuario usuario) {
     return nombresPersonajes;
 }
 
+public String obtenerNombrePersonajePorId(int id) {
+    String nombrePersonaje = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Connection conexion = null;
+
+    try {
+        conexion = obtenerConexion();
+        ps = conexion.prepareStatement("SELECT nombre FROM personaje WHERE id = ?");
+        ps.setInt(1, id); 
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            nombrePersonaje = rs.getString("nombre");
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    return nombrePersonaje;
+}
+
+
 public List<String> obtenerNombresPersonajesDisponibles() {
     List<String> nombresPersonajes = new ArrayList<>();
 
@@ -367,7 +386,7 @@ public List<String> obtenerNombresPersonajesDisponibles() {
             }
         } else {
 
-            System.err.println("Error: La conexión no está abierta.");
+            System.err.println("Error: La conexión no está abierta");
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -375,6 +394,7 @@ public List<String> obtenerNombresPersonajesDisponibles() {
 
     return nombresPersonajes;
 }
+
 
 public Estadistica obtenerEstadisticasPorNombre(String nombrePersonaje) {
     Estadistica estadistica = null;
@@ -405,22 +425,17 @@ public List<Habilidad> obtenerHabilidadesPorNombre(String nombrePersonaje) {
     List<Habilidad> habilidades = new ArrayList<>();
 
     try {
-        
-    	String query = "SELECT nombre, descripcion,personaje_nombre " +
-                "FROM habilidades " +
-                "WHERE personaje_nombre = ?";
+        String query = "SELECT nombre, descripcion, danio FROM habilidades WHERE personaje_nombre = ?";
         try (PreparedStatement stmt = con.prepareStatement(query)) {
-    
             stmt.setString(1, nombrePersonaje);
 
             try (ResultSet rs = stmt.executeQuery()) {
-               
                 while (rs.next()) {
                     String nombreHabilidad = rs.getString("nombre");
                     String descripcion = rs.getString("descripcion");
-                    String personaje_nombre = rs.getString("personaje_nombre");
+                    int danio = rs.getInt("danio"); 
 
-                    Habilidad habilidad = new Habilidad(nombreHabilidad, descripcion, personaje_nombre);
+                    Habilidad habilidad = new Habilidad(nombreHabilidad, descripcion, nombrePersonaje, danio);
                     habilidades.add(habilidad);
                 }
             }
@@ -432,26 +447,19 @@ public List<Habilidad> obtenerHabilidadesPorNombre(String nombrePersonaje) {
     return habilidades;
 }
 
-public Connection obtenerConexion() {
-    return con;
-}
-
-public List<Personaje> obtenerEquipoDeBaseDeDatos(Usuario usuario) {
-    List<Personaje> equipo = new ArrayList<>();
+public int obtenerIdPersonajePorNombre(String nombre) {
+    int personajeId = -1;
     PreparedStatement ps = null;
     ResultSet rs = null;
 
     try {
         con = conectar();
-        ps = con.prepareStatement("SELECT personaje_nombre FROM equipo WHERE jugador_id = ?");
-        ps.setInt(1, usuario.getJugador_id()); 
+        ps = con.prepareStatement("SELECT id FROM personaje WHERE nombre = ?");
+        ps.setString(1, nombre); 
         rs = ps.executeQuery();
 
-        while (rs.next()) {
-            String personajeNombre = rs.getString("personaje_nombre");
-            
-            Personaje personaje = new Personaje(personajeNombre, personajeNombre);
-            equipo.add(personaje);
+        if (rs.next()) {
+            personajeId = rs.getInt("id");
         }
     } catch (SQLException ex) {
         ex.printStackTrace();
@@ -464,6 +472,133 @@ public List<Personaje> obtenerEquipoDeBaseDeDatos(Usuario usuario) {
         }
     }
 
+    return personajeId;
+}
+
+public List<Personaje> obtenerEquipoDeBaseDeDatos(Usuario usuario, int id) {
+    List<Personaje> equipo = new ArrayList<>();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        con = conectar();
+        ps = con.prepareStatement("SELECT personaje_nombre FROM personaje_equipo WHERE equipo_id = ?");
+        ps.setInt(1, id);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+            String nombrePersonaje = rs.getString("personaje_nombre");
+            
+            Personaje personaje = new Personaje(nombrePersonaje, nombrePersonaje);
+            equipo.add(personaje);
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
     return equipo;
 }
+
+
+public String obtenerNombreEquipo(int id) {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    String nombreEquipo = null;
+
+    try {
+        conn = conectar();
+        if (conn != null) {
+            String sql = "SELECT nombre_equipo FROM equipo WHERE id = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                nombreEquipo = rs.getString("nombre_equipo");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    return nombreEquipo;
 }
+public Connection obtenerConexion() {
+    return con;
+}
+
+public boolean existeEquipoEnBaseDeDatos(Usuario usuario, String nombreEquipo) {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    boolean existe = false;
+
+    try {
+        conn = conectar();
+        String sql = "SELECT 1 FROM equipo WHERE jugador_id = ? AND nombre_equipo = ?";
+        stmt = conn.prepareStatement(sql);
+        stmt.setInt(1, usuario.getJugador_id());
+        stmt.setString(2, nombreEquipo);
+        rs = stmt.executeQuery();
+        if (rs.next()) {
+            existe = true;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    return existe;
+}
+}
+

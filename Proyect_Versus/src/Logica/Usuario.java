@@ -7,105 +7,139 @@ import java.util.List;
 import javax.swing.*;
 import BD.*;
 
-public class Usuario{
+public class Usuario extends Jugador {
 	
     private String nombre;
     private String contrasena;
     private int nivelCuenta;
+    private int nivelClasificatorias;
     private int jugador_id;
     private List<Partida> historial; 
     private Personaje personaje;
+    private int equipoId;  
     private Conexion con = new Conexion();
     private Connection conexion = con.conectar();
     private PreparedStatement stmt;
-	private List<Personaje> equipo;
-	
+    private Equipo equipoSeleccionado; 
+
+    @Override
+    public void crearEquipoAleatorio() {
+    
+    }
+	  
     public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
         this.contrasena = contrasena;
         this.nivelCuenta = 1;
+        this.nivelClasificatorias = 1;
         this.historial = new LinkedList<>();
         this.jugador_id = con.obtenerIdJugador(conexion,nombre, contrasena);
-        
     }
 
-    public Usuario (String nombre, String contrasena, int nivelCuenta, int jugador_id,List<Partida> historial) {
-    	this.nombre = nombre;
-    	this.contrasena = contrasena;
-    	this.nivelCuenta = nivelCuenta;
-    	this.jugador_id = jugador_id;
-    	this.historial = historial;
+    public Usuario (String nombre, String contrasena, int nivelCuenta, int nivelClasificatorias, int jugador_id,List<Partida> historial) {
+        this.nombre = nombre;
+        this.contrasena = contrasena;
+        this.nivelCuenta = nivelCuenta;
+        this.nivelClasificatorias = nivelClasificatorias;
+        this.jugador_id = jugador_id;
+        this.historial = historial;
     }
       
     public Usuario(String nombre) {
         this.nombre = nombre;
         this.contrasena = "contrasena_maquina"; 
         this.nivelCuenta = 1; 
+        this.nivelClasificatorias = 10; 
     }
 
     @Override
-	public String toString() {
-		return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
-				+ ", jugador_id=" + jugador_id + ", historial=" + historial + ", personaje=" + personaje + ", equipo="
-				+ equipo + "]";
-	}
+    public String toString() {
+        return "Usuario [nombre=" + nombre + ", contrasena=" + contrasena + ", nivelCuenta=" + nivelCuenta
+                + ", nivelClasificatorias=" + nivelClasificatorias + ", jugador_id=" + jugador_id + ", historial="
+                + historial + ", personaje=" + personaje + "]";
+    }
 
-	public int getNivelCuenta() {
-    	return nivelCuenta;
+    public int getNivelCuenta() {
+        return nivelCuenta;
     }
     
     public void setNivelCuenta(int nivelCuenta) {
-    	this.nivelCuenta = nivelCuenta;
+        this.nivelCuenta = nivelCuenta;
     }
-      
+    
+    public int getNivelClasificatorias() {
+        return nivelClasificatorias;
+    }
+    
+    public void setNivelClasificatorias(int nivelClasificatorias) {
+        this.nivelClasificatorias = nivelClasificatorias;
+    }
+    
     public String getNombre() {
-    	return nombre;
+        return nombre;
     }
     
     public void setNombre(String nombre) {
-    	this.nombre = nombre;
+        this.nombre = nombre;
     }
     
     public String getContrasena() {
-    	return contrasena;
+        return contrasena;
     }
     
     public void setContrasena(String contrasena) {
-    	this.contrasena = contrasena;
+        this.contrasena = contrasena;
     }
     
     public int getJugador_id() {
-    	return jugador_id;
+        return jugador_id;
     }
     
     public void setJugador_id(int jugador_id) {
-    	this.jugador_id = jugador_id;
+        this.jugador_id = jugador_id;
     }
     
     public List<Partida> getHistorial() {
-    	return historial;
+        return historial;
     }
     
     public void setHistorial(List<Partida> historial) {
-    	this.historial = historial;
+        this.historial = historial;
     }
     
     public void setPersonaje(Personaje personaje) {
-    	this.personaje = personaje;
+        this.personaje = personaje;
     }
     
     public Personaje getPersonaje() {
-    	return personaje;
+        return personaje;
+    }
+
+    public int getEquipoId() {
+        return equipoId;
+    }
+
+    public void setEquipoId(int equipoId) {
+        this.equipoId = equipoId;
+    }
+
+    public Equipo getEquipoSeleccionado() { 
+        return equipoSeleccionado;
+    }
+
+    public void setEquipoSeleccionado(Equipo equipoSeleccionado) { 
+        this.equipoSeleccionado = equipoSeleccionado;
     }
     
 	public boolean guardar() {
-        String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `jugador_id`, `nivelCuenta`) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO `usuario`(`nombre`, `contrasena`, `jugador_id`, `nivelCuenta`, `nivelClasificatorias`) VALUES (?,?,?,?,?)";
         try {
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, this.getNombre());
             stmt.setString(2, this.getContrasena());
             stmt.setLong(3, this.getJugador_id());
             stmt.setLong(4, this.getNivelCuenta());
+            stmt.setLong(5, this.getNivelClasificatorias());
             stmt.executeUpdate();
             conexion.close();
             return true;
@@ -116,13 +150,14 @@ public class Usuario{
     }
 
 	public boolean editar() {
-        String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`jugador_id`=? ,`nivelCuenta`=?  WHERE nombre = ?";
+        String sql = "UPDATE `usuario` SET `nombre`=?,`contrasena`=?,`jugador_id`=? ,`nivelCuenta`=?,`nivelClasificatorias`=? WHERE nombre = ?";
         try {
             stmt = conexion.prepareStatement(sql);
             stmt.setString(1, this.getNombre());
             stmt.setString(2, this.getContrasena());
             stmt.setLong(3, this.getJugador_id());
             stmt.setLong(4, this.getNivelCuenta());
+            stmt.setLong(5, this.getNivelClasificatorias());
             stmt.executeUpdate();
             conexion.close();
             return true;
@@ -174,32 +209,33 @@ public class Usuario{
     public void armarEquipo(Usuario usuario) {
         List<Personaje> personajesDisponibles = obtenerPersonajesDisponibles();
         List<Personaje> equipo = new ArrayList<>();
-
         for (int i = 0; i < 4; i++) {
             Personaje seleccionado = mostrarPersonajesYObtenerSeleccion(personajesDisponibles);
             if (seleccionado == null) {
-                JOptionPane.showMessageDialog(null, "Selección de personajes cancelada.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Selección de personajes cancelada", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
                 return; 
             }
-
             equipo.add(seleccionado);
             personajesDisponibles.remove(seleccionado);
         }
-
         if (!equipo.isEmpty()) {
+            String nombreEquipo = JOptionPane.showInputDialog("Por favor, ingresa un nombre para tu equipo:");
+            if (nombreEquipo == null || nombreEquipo.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El nombre del equipo no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             con.eliminarEquipo(usuario);
-            boolean exito = con.guardarEquipoEnBaseDeDatos(usuario, equipo);
+            boolean exito = con.guardarEquipoEnBaseDeDatos(usuario, nombreEquipo, equipo);
             if (exito) {
-                JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Equipo guardado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(null, "Error al guardar el equipo.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al guardar el equipo", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-
+    
     public List<Personaje> obtenerPersonajesDisponibles() {
         List<Personaje> personajesDisponibles = new ArrayList<>();
-
         try {
             String sql = "SELECT nombre, tipo_de_personaje FROM personaje";
             Statement statement = conexion.createStatement();
@@ -208,72 +244,234 @@ public class Usuario{
             while (rs.next()) {
                 String nombre = rs.getString("nombre");
                 String tipo_de_personaje = rs.getString("tipo_de_personaje");
+
                 Personaje personaje = new Personaje(nombre, tipo_de_personaje);
                 personajesDisponibles.add(personaje);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return personajesDisponibles;
+        
     }
-
+    
     public Personaje mostrarPersonajesYObtenerSeleccion(List<Personaje> personajesDisponibles) {
         if (personajesDisponibles.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay personajes disponibles", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
-        }
-        
+        } 
         String[] nombresYTipos = personajesDisponibles.stream()
                 .map(personaje -> personaje.getNombre() + " - " + personaje.getTipo())
                 .toArray(String[]::new);
         JComboBox<String> comboBox = new JComboBox<>(nombresYTipos);
-
-  int seleccion = JOptionPane.showOptionDialog(null, comboBox,"Selecciona un personaje para tu equipo:", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Aceptar"}, null);
-
+        int seleccion = JOptionPane.showOptionDialog(null, comboBox,"Selecciona un personaje para tu equipo:", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Aceptar"}, null);
         if (seleccion == JOptionPane.OK_OPTION) {
             String selectedItem = (String) comboBox.getSelectedItem();
             String[] parts = selectedItem.split(" - ");
             String nombreSeleccionado = parts[0];
-
             for (Personaje personaje : personajesDisponibles) {
                 if (personaje.getNombre().equals(nombreSeleccionado)) {
                     return personaje;
                 }
             }
-            
             JOptionPane.showMessageDialog(null, "Personaje no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-
-        return new Personaje("Cancelado", ""); 
-        }
+        return null;
+    }
 
     public List<Personaje> getEquipo() {
-		return equipo;
-	}
-
-	public void setEquipo(List<Personaje> equipo) {
+        return equipo;
+    }
+ 
+    public void setEquipo(String nombreEquipo, List<Personaje> equipo) {
         if (equipo.size() > 4) {
             throw new IllegalArgumentException("El equipo no puede tener más de 4 personajes");
         }
+        this.equipo = equipo;
+        System.out.println("Equipo establecido: " + this.equipo);
+    }
 
-        boolean exito = con.guardarEquipoEnBaseDeDatos(this, equipo);
-        if (!exito) {
-            throw new RuntimeException("Hubo un problema al guardar el equipo en la base de datos:");
+    public void seleccionarOArmarEquipo(Usuario usuario) {
+        List<Equipo> equiposGuardados = obtenerEquiposGuardados(usuario);
+
+        if (!equiposGuardados.isEmpty()) {
+            int seleccion = JOptionPane.showOptionDialog(null, "Tienes equipos guardados. ¿Quieres usar uno de ellos o armar uno nuevo?", "Equipos guardados", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Usar equipo existente", "Armar nuevo equipo", "Cancelar"}, null);
+            switch (seleccion) {
+                case JOptionPane.YES_OPTION:
+                    Equipo equipoSeleccionado = mostrarEquiposYObtenerSeleccion(equiposGuardados);
+                    if (equipoSeleccionado != null) {
+                        String nombreEquipo = equipoSeleccionado.getNombre();
+                        usuario.setEquipo(nombreEquipo, equipoSeleccionado.getPersonajes());
+                        usuario.setEquipoSeleccionado(equipoSeleccionado); 
+                    }
+                    break;
+                case JOptionPane.NO_OPTION:
+                    usuario.armarEquipo(usuario);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            usuario.armarEquipo(usuario);
+        }
+    }
+
+    public boolean puedeJugar() {
+        Equipo equipoSeleccionado = this.getEquipoSeleccionado();
+        if (equipoSeleccionado == null || equipoSeleccionado.getPersonajes().isEmpty()) {
+            JOptionPane.showMessageDialog(null,"Debes seleccionar o crear un equipo antes de jugar una partida.","Seleccion Personaje",JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        System.out.println("Equipo después de jugar: " + this.equipo); 
+        return true;
+    }
+
+    public List<Equipo> obtenerEquiposGuardados(Usuario usuario) {
+        List<Equipo> equipos = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conexion = con.conectar();
+            ps = conexion.prepareStatement("SELECT DISTINCT id, nombre_equipo FROM equipo WHERE jugador_id = ?");
+            ps.setInt(1, usuario.getJugador_id()); 
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nombreEquipo = rs.getString("nombre_equipo");
+                List<Personaje> personajes = obtenerPersonajesPorEquipoId(id);
+                equipos.add(new Equipo(id, nombreEquipo, personajes));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return equipos;
+    }
+    
+    public List<Personaje> obtenerPersonajesPorEquipoId(int id) {
+        List<Personaje> personajes = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conexion = con.conectar();
+            ps = conexion.prepareStatement("SELECT personaje_nombre FROM personaje_equipo WHERE equipo_id = ?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String nombrePersonaje = rs.getString("personaje_nombre");
+                Personaje personaje = obtenerPersonajePorNombre(nombrePersonaje);
+                personajes.add(personaje);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return personajes;
+    }
+
+    public Personaje obtenerPersonajePorNombre(String nombre) {
+        Personaje personaje = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conexion = con.conectar();
+            ps = conexion.prepareStatement("SELECT * FROM personaje WHERE nombre = ?");
+            ps.setString(1, nombre); 
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String nombrePersonaje = rs.getString("nombre");
+                int nivelDeHabilidad = rs.getInt("nivel_de_habilidad");
+                String tipoDePersonaje = rs.getString("tipo_de_personaje");
+                int jugadorId = rs.getInt("jugador_id");
+                int estadisticaId = rs.getInt("Estadistica_id_Estadistica");
+
+                personaje = new Personaje(nombrePersonaje, nivelDeHabilidad, tipoDePersonaje, jugadorId, estadisticaId);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
 
-        this.equipo = equipo;
+        return personaje;
     }
-	
-	public boolean puedeJugar() {
-	    List<Personaje> equipoDB = con.obtenerEquipoDeBaseDeDatos(this);
-	    JOptionPane.showMessageDialog(null, "Equipo obtenido de la base de datos: " + equipoDB, "Equipo",JOptionPane.DEFAULT_OPTION);
-	    if (equipoDB == null || equipoDB.isEmpty()) {
-	        JOptionPane.showMessageDialog(null,"Debes seleccionar o crear un equipo antes de jugar una partida.","Seleccion Personaje",JOptionPane.INFORMATION_MESSAGE);
-	        return false;
-	    }
-	    this.setEquipo(equipoDB);
-	    return true;
-	}
+    
+    public Equipo mostrarEquiposYObtenerSeleccion(List<Equipo> equiposDisponibles) {
+        if (equiposDisponibles.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay equipos disponibles", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        } 
+        String[] nombresEquipos = equiposDisponibles.stream()
+                .map(equipo -> equipo.getNombre())
+                .toArray(String[]::new);
+        JComboBox<String> comboBox = new JComboBox<>(nombresEquipos);
+
+        int seleccion = JOptionPane.showOptionDialog(null, comboBox,"Selecciona un equipo:", JOptionPane.OK_CANCEL_OPTION,JOptionPane.PLAIN_MESSAGE, null, new Object[]{"Aceptar"}, null);
+        if (seleccion == JOptionPane.OK_OPTION) {
+            String nombreSeleccionado = (String) comboBox.getSelectedItem();
+            for (Equipo equipo : equiposDisponibles) {
+                if (equipo.getNombre().equals(nombreSeleccionado)) {
+                    return equipo;
+                }
+            }
+            JOptionPane.showMessageDialog(null, "Equipo no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        return null; 
+    }
+    
+    public Personaje obtenerPersonajePorId(int id) {
+        Personaje personaje = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conexion = con.conectar();
+            ps = conexion.prepareStatement("SELECT * FROM personaje WHERE id = ?");
+            ps.setInt(1, id); 
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String nombrePersonaje = rs.getString("nombre");
+                int nivelDeHabilidad = rs.getInt("nivel_de_habilidad");
+                String tipoDePersonaje = rs.getString("tipo_de_personaje");
+                int jugadorId = rs.getInt("jugador_id");
+                int estadisticaId = rs.getInt("Estadistica_id_Estadistica");
+                
+                personaje = new Personaje(nombrePersonaje, nivelDeHabilidad, tipoDePersonaje, jugadorId, estadisticaId);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return personaje;
+    }
 }

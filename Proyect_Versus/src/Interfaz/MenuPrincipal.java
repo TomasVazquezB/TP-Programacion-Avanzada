@@ -13,6 +13,7 @@ public class MenuPrincipal extends JFrame {
     private static final long serialVersionUID = -7819908745778904368L;
 	private JPanel contentPane;
     private Conexion con; 
+    private Usuario usuario; 
     
     public void run(Usuario usuario) {
         try {
@@ -24,6 +25,7 @@ public class MenuPrincipal extends JFrame {
     }
     
     public MenuPrincipal(Usuario usuario) {
+        this.usuario = usuario; 
     	
         setTitle("Project Versus");
         setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Alumno\\Documents\\GitHub\\TP-Programacion-Avanzada\\Proyect_Versus\\src\\img\\icono.jpg"));
@@ -41,42 +43,33 @@ public class MenuPrincipal extends JFrame {
         contentPane.add(textomenu);
 
         JButton botondearmarequipo = new JButton("Armar y Seleccionar Equipo");
-        botondearmarequipo.setBounds(10, 217, 190, 58);
+        botondearmarequipo.setBounds(10, 217, 191, 58);
         botondearmarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
         botondearmarequipo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                usuario.armarEquipo(usuario);
+                usuario.seleccionarOArmarEquipo(usuario); 
             }
         });
         contentPane.add(botondearmarequipo);
-        
-        JButton botonseleccionarequipo = new JButton("Seleccionar Equipo");
-        botonseleccionarequipo.setBounds(170, 150, 161, 58);
-        botonseleccionarequipo.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        contentPane.add(botonseleccionarequipo);
-        
-        
-        botonseleccionarequipo.addActionListener(new ActionListener() {
-        	public void actionPerformed (ActionEvent e) {
-        		
-        		
-        	}
-        });
-        
+
         JButton botonbatalla = new JButton("Batalla");
-        botonbatalla.setBounds(230, 217, 100, 58);
+        botonbatalla.setBounds(230, 217, 101, 58);
         botonbatalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
         contentPane.add(botonbatalla);
 
         botonbatalla.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	Conexion conexion = new Conexion(); 
-        		Partida nuevaPartida = new Partida(usuario, conexion);
-        		nuevaPartida.jugar();
+                Conexion conexion = new Conexion(); 
+                Partida nuevaPartida = new Partida(usuario, conexion);
 
+                new Thread(new Runnable() {
+                    public void run() {
+                        nuevaPartida.iniciarPartida();
+                    }
+                }).start();
             }
         });
-        
+
         con = new Conexion();
 
         JButton botonDetalles = new JButton("Detalles de Personajes");
@@ -98,7 +91,7 @@ public class MenuPrincipal extends JFrame {
             }
         });
 
-        botondesalir.setBounds(360, 217, 100, 58);
+        botondesalir.setBounds(355, 217, 101, 58);
         botondesalir.setFont(new Font("Tahoma", Font.PLAIN, 12));
         contentPane.add(botondesalir);
 

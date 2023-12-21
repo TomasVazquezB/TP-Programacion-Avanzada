@@ -15,6 +15,11 @@ public class Estadistica {
 		this.er = er;
 		this.em = em;
 	}
+ 
+	public Estadistica() {
+		super();
+	}
+
 
 	@Override
 	public String toString() {

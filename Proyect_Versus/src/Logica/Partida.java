@@ -1,191 +1,127 @@
 package Logica;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import javax.swing.JOptionPane;
 import BD.*;
-import javax.swing.*;
 
 public class Partida {
-    private Usuario jugador;
-    private Usuario maquina;
-    private List<Personaje> jugadorPersonaje;
-    private List<Personaje> maquinaPersonaje;
-    private Conexion con; 
+    private Jugador usuario;
+    private Jugador maquina;
+    private Conexion con;
 
-    public Partida(Usuario jugador, Conexion con) {
-        this.jugador = jugador;
-        this.setCon(con);
-        this.jugadorPersonaje = cargarPersonajesDesdeBD(jugador);
-        this.maquina = new Usuario("Maquina"); 
-        this.maquinaPersonaje = cargarPersonajesDesdeBD(jugador);
+    public Partida(Usuario usuario, Conexion con) {
+        this.usuario = usuario;
+        this.con = con;
+        this.maquina = new Maquina(usuario);
     }
     
-    public Conexion getCon() {
-    	return con;
-    }
-    
-    public void setCon(Conexion con) {
-    	this.con = con;
-    }
-    
-    public Usuario getJugador() {
-		return jugador;
-	}
-    
-	public void setJugador(Usuario jugador) {
-		this.jugador = jugador;
-	}
-
-	public Usuario getMaquina() {
-		return maquina;
-	}
-
-	public void setMaquina(Usuario maquina) {
-		this.maquina = maquina;
-	}
-
-	public List<Personaje> getJugadorPersonaje() {
-		return jugadorPersonaje;
-	}
-
-	public void setJugadorPersonaje(List<Personaje> jugadorPersonaje) {
-		this.jugadorPersonaje = jugadorPersonaje;
-	}
-
-	public List<Personaje> getMaquinaPersonaje() {
-		return maquinaPersonaje;
-	}
-
-	public void setMaquinaPersonaje(List<Personaje> maquinaPersonaje) {
-		this.maquinaPersonaje = maquinaPersonaje;
-	}
-
-	public void iniciarPartida() {
-        if (jugador.puedeJugar() && maquina.puedeJugar()) {
-        	JOptionPane.showMessageDialog(null, "¡La partida ha comenzado!" , "Partida Empezada", JOptionPane.DEFAULT_OPTION);
-        } else {
-        	JOptionPane.showMessageDialog(null, "No puedes iniciar la partida.", "Error al iniciar partida", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-	
-    public void jugar() {
-        List<Personaje> equipoAleatorio = cargarPersonajesDesdeBD(maquina);
-        maquina.setEquipo(equipoAleatorio);
-
-        if (!jugador.puedeJugar() || !maquina.puedeJugar()) {
-        	JOptionPane.showMessageDialog(null, "No puedes iniciar la partida.", "Error al iniciar partida",JOptionPane.ERROR_MESSAGE);
+    //Inicializacion de la partida
+    public void iniciarPartida() {
+        if (!((Usuario) usuario).puedeJugar()) {
             return;
         }
-
-        try {
-        	JOptionPane.showMessageDialog(null, "¡La partida ha comenzado!", "Partida Iniciada",JOptionPane.DEFAULT_OPTION);
-        	
-            while (jugadorTieneVida() && maquinaTieneVida()) {
-                realizarRonda();
+        maquina.crearEquipoAleatorio();
+        mostrarEquipoMaquina();
+        while (!partidaTerminada()) {
+            realizarTurno(usuario, true);
+            if (!partidaTerminada()) {
+                realizarTurno(maquina, false);
             }
-
-            determinarResultadoPartida();
-        } catch (Exception e) {
-        	JOptionPane.showMessageDialog(null, "Error durante la batalla: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
-            throw e;
-        }
+        }  
+        guardarResultado();
     }
+    
+    //Realizacion de turno
+    private void realizarTurno(Jugador jugador, boolean esUsuario) {
+        Random rand = new Random();
+        int danio;  
+        Personaje personaje;
+        Personaje objetivo;
+        Habilidad habilidad = null;
 
-    private void realizarRonda() {
-        Collections.shuffle(jugadorPersonaje);
-        Collections.shuffle(maquinaPersonaje);
-        for (Personaje personaje : jugadorPersonaje) {
-            realizarTurno(personaje, maquinaPersonaje);
-        }
-        for (Personaje personaje : maquinaPersonaje) {
-            realizarTurno(personaje, jugadorPersonaje);
-        }
-    }
+        //Se define el 'oponente' aquí
+        Jugador oponente = (jugador == usuario) ? maquina : usuario;
 
-    private void realizarTurno(Personaje atacante, List<Personaje> defensores) {
-        Personaje defensor = seleccionarDefensorAleatorio(defensores);
-        if (defensor.obtenerVida() > 0) {
-            realizarAtaque(atacante, defensor);
-            if (defensor.obtenerVida() <= 0) {
-                defensores.remove(defensor);
-                JOptionPane.showMessageDialog(null,"¡" + defensor.getNombre() + " ha sido derrotado!", "Derrotado", JOptionPane.INFORMATION_MESSAGE);
+        if (esUsuario) {
+            //Deja que el usuario elija qué personaje va a usar para atacar
+            String[] personajes = jugador.getEquipo().stream().map(Personaje::getNombre).toArray(String[]::new);
+            String personajeSeleccionado = (String) JOptionPane.showInputDialog(null, "Elige un personaje", "Personajes", JOptionPane.QUESTION_MESSAGE, null, personajes, personajes[0]);
+            personaje = jugador.getEquipo().stream().filter(p -> p.getNombre().equals(personajeSeleccionado)).findFirst().orElse(null);
+
+            //Deja que el usuario elija a qué personaje desea atacar
+            String[] objetivos = oponente.getEquipo().stream().map(Personaje::getNombre).toArray(String[]::new);
+            String objetivoSeleccionado = (String) JOptionPane.showInputDialog(null, "Elige un objetivo", "Objetivos", JOptionPane.QUESTION_MESSAGE, null, objetivos, objetivos[0]);
+            objetivo = oponente.getEquipo().stream().filter(p -> p.getNombre().equals(objetivoSeleccionado)).findFirst().orElse(null);
+
+            //Eleccion de Ataques
+            Object[] opciones = {"Ataque básico", "Usar habilidad"};
+            int seleccion = JOptionPane.showOptionDialog(null, "¿Qué acción te gustaría realizar?", "Turno del jugador", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+            if (seleccion == 0) {
+                danio = personaje.getEstadisticas().getAtk();
+            } else {
+                String[] habilidades = personaje.getHabilidades().stream().map(Habilidad::getNombre).toArray(String[]::new);
+                String habilidadSeleccionada = (String) JOptionPane.showInputDialog(null, "Elige una habilidad", "Habilidades", JOptionPane.QUESTION_MESSAGE, null, habilidades, habilidades[0]);
+                habilidad = personaje.getHabilidades().stream().filter(h -> h.getNombre().equals(habilidadSeleccionada)).findFirst().orElse(null);
+                JOptionPane.showMessageDialog(null, habilidad.getDescripcion());
+                danio = habilidad.getDanio();
+                personaje.getEstadisticas().reducirVida(5); 
             }
-        }
-    }
-    private Personaje seleccionarDefensorAleatorio(List<Personaje> personajes) {
-        Collections.shuffle(personajes);
-        return personajes.get(0);
-    }
-
-    private void realizarAtaque(Personaje atacante, Personaje defensor) {
-        int ataque = atacante.getEstadisticas().getAtk();
-        int defensa = defensor.getEstadisticas().getEr();
-        int danio = Math.max(ataque - defensa, 0);
-        int vidaActualDefensor = defensor.obtenerVida();
-        int nuevoValorVidaDefensor = vidaActualDefensor - danio;
-        defensor.getEstadisticas().setHp(Math.max(nuevoValorVidaDefensor, 0));
-        JOptionPane.showMessageDialog(null, atacante.getNombre() + " atacó a " + defensor.getNombre() + " y causó " + danio + " de daño.","Ataque",JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void determinarResultadoPartida() {
-        String mensaje = "";
-
-        if (!jugadorTieneVida()) {
-            mensaje = "¡La máquina ha ganado la batalla!";
-        } else if (!maquinaTieneVida()) {
-            mensaje = "¡Has ganado la batalla!";
         } else {
-            mensaje = "La batalla terminó en empate.";
+            personaje = jugador.getEquipo().get(rand.nextInt(jugador.getEquipo().size()));
+            objetivo = oponente.getEquipo().get(rand.nextInt(oponente.getEquipo().size()));
+            habilidad = personaje.getHabilidades().get(rand.nextInt(personaje.getHabilidades().size()));
+            JOptionPane.showMessageDialog(null, personaje.getNombre() + " Usó " + habilidad.getNombre());
+            danio = habilidad.getDanio();
         }
 
-        if (!mensaje.isEmpty()) {
-        	JOptionPane.showMessageDialog(null, mensaje, "Resultado",JOptionPane.INFORMATION_MESSAGE);
+        if (esFuerteContra(personaje.getTipo(), objetivo.getTipo())) {
+            danio *= 4.75; 
+        } else if (esDebilContra(personaje.getTipo(), objetivo.getTipo())) {
+            danio *= 2.55;
         }
+        objetivo.getEstadisticas().reducirVida(danio);
+        JOptionPane.showMessageDialog(null, objetivo.getNombre() + " Ahora tiene " + objetivo.getEstadisticas().getHp() + " De vida","Vida",JOptionPane.DEFAULT_OPTION);
     }
-
-    private boolean jugadorTieneVida() {
-        for (Personaje personaje : jugadorPersonaje) {
-            if (personaje.obtenerVida() > 0) {
-                return true;
+    
+    //Finalizacion de la partida
+    private boolean partidaTerminada() {
+        return equipoDerrotado(usuario.getEquipo()) || equipoDerrotado(maquina.getEquipo());
+    }
+    private boolean equipoDerrotado(List<Personaje> equipo) {
+        for (Personaje personaje : equipo) {
+            if (personaje.getEstadisticas().getHp() > 0) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
-
-    private boolean maquinaTieneVida() {
-        for (Personaje personaje : maquinaPersonaje) {
-            if (personaje.obtenerVida() > 0) {
-                return true;
-            }
+    
+    //Guardar Resultado de la partida
+    private void guardarResultado() {
+        String resultado = equipoDerrotado(usuario.getEquipo()) ? "Derrota" : "Victoria";
+        con.actualizarResultadoPartida((Usuario) usuario, resultado);
+    }
+    
+    //Mostrar el equipo que tiene la maquina
+    private void mostrarEquipoMaquina() {
+        String equipo = "Equipo de la máquina:\n";
+        for (Personaje personaje : maquina.getEquipo()) {
+            equipo += personaje.getNombre() + "\n";
         }
-        return false;
+        JOptionPane.showMessageDialog(null, equipo);
     }
-
-    private List<Personaje> cargarPersonajesDesdeBD(Usuario usuario) {
-        try {
-            Conexion conexion = new Conexion();
-            List<String> nombresPersonajesDisponibles = conexion.obtenerNombresPersonajesDisponibles();
-            List<Personaje> personajesAleatorios = new ArrayList<>();
-            Random random = new Random();
-            int cantidadPersonajes = obtenerCantidadPersonajesAleatorios(personajesAleatorios);
-            for (int i = 0; i < cantidadPersonajes; i++) {
-                int indiceAleatorio = random.nextInt(nombresPersonajesDisponibles.size());
-                String nombrePersonaje = nombresPersonajesDisponibles.get(indiceAleatorio);
-                Personaje nuevoPersonaje = new Personaje(nombrePersonaje, nombrePersonaje);
-                personajesAleatorios.add(nuevoPersonaje);
-                nombresPersonajesDisponibles.remove(indiceAleatorio);
-            }
-            return personajesAleatorios;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar personajes aleatorios: " + e.getMessage(), "Error cargar personajes", JOptionPane.ERROR_MESSAGE);
-            return new ArrayList<>();
-        }
+    
+    private boolean esFuerteContra(String tipoPersonaje, String tipoObjetivo) {
+        return (tipoPersonaje.equals("Pyro") && tipoObjetivo.equals("Cryo")) ||
+               (tipoPersonaje.equals("Cryo") && tipoObjetivo.equals("Electro")) ||
+               (tipoPersonaje.equals("Electro") && tipoObjetivo.equals("Hydro")) ||
+               (tipoPersonaje.equals("Hydro") && tipoObjetivo.equals("Pyro"));
     }
-
-    private int obtenerCantidadPersonajesAleatorios(List<Personaje> personajesDisponibles) {
-        int maxCantidad = Math.min(4, personajesDisponibles.size());
-        return (int) (Math.random() * maxCantidad) + 1;
+    private boolean esDebilContra(String tipoPersonaje, String tipoObjetivo) {
+        return (tipoPersonaje.equals("Pyro") && tipoObjetivo.equals("Hydro")) ||
+               (tipoPersonaje.equals("Cryo") && tipoObjetivo.equals("Pyro")) ||
+               (tipoPersonaje.equals("Electro") && tipoObjetivo.equals("Cryo")) ||
+               (tipoPersonaje.equals("Hydro") && tipoObjetivo.equals("Electro"));
     }
 }
